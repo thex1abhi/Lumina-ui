@@ -1,5 +1,5 @@
-import { genToken } from "../configs/token"
-import User from "../models/user.model"
+import { genToken } from "../configs/token.js"
+import User from "../models/user.model.js"
 
 export const googleAuth = async (req, res) => {
 
@@ -25,4 +25,17 @@ export const googleAuth = async (req, res) => {
         })
     }
 
+} 
+export const logout = async (req,res) => {
+    try {
+        await res.clearCookie("token", {
+            httpOnly: true,
+            secure: false,
+            sameSite: "strict",
+        } ) 
+        return res.status(200).json({message:"Logout successfull "})
+    } catch (error) {
+         return res.status(400).json({message:`Logout Failed ${error} `})
+    }
+    
 }
