@@ -1,7 +1,42 @@
-import React from "react";
+import React, { useState } from "react";
 import { AnimatePresence, motion } from "motion/react"
-import { TbX } from "react-icons/tb"
+import { TbCopy, TbDownload, TbLogin2, TbSettings, TbX } from "react-icons/tb"
+import { SiValorant } from "react-icons/si";
+import {HiSparkles} from "react-icons/hi2"
+
+const steps = [
+    {
+        icon: TbLogin2,
+        title: "Login with Google",
+        desc: "Secure OAuth to unlock all AI tools instantly ",
+    },
+    {
+        icon: HiSparkles,
+        title: "Get 150 AI Credits",
+        desc: "Free credits to  generate premium UI components.",
+    },
+    {
+        icon: TbSettings,
+        title: "Customize Props",
+        desc: "Fine-tune preview every change live.",
+    },
+    {
+        icon: TbCopy,
+        title: "Generate Components",
+        desc: "AI builds production-ready JSX components",
+    },
+    {
+        icon: TbDownload,
+        title: "Copy or Save",
+        desc: "Export clean code straight into your project.",
+    },
+];
+
+
 function Auth() {
+    const [active, setActive] = useState(0);
+
+
     return (
         <AnimatePresence >
             < motion.div
@@ -14,7 +49,7 @@ function Auth() {
                     initial={{ opacity: 0, y: 28, scale: 0.97 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 28, scale: 0.97 }}
-                    transition={{ duration: 0.5 }} 
+                    transition={{ duration: 0.5 }}
                     className="flex flex-col sm:flex-row  max-w-220 w-full max-h-[90vh]  overflow-y-auto  rounded-2xl border border-2xl border-[#3be8ff]/10 
                  shadow-[0_40px_80px_rgba(0,0,0,0.8)] relative " >
 
@@ -30,8 +65,37 @@ function Auth() {
                          bg-[radial-gradient(circle,rgba(59,232,255 ,0.08 )_0%,transparent_70% )] 
                         pointer-events-none " />
 
+                        <motion.div
+                            initial={{ opacity: 0, x: -14 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 0.2 }}
+                            className="flex items-center gap-3 mb-7 sm:mb-9">
+                            <div className="w-9 h-9 rounded-xl bg-linear-to-br from-[#3be8ff]
+                              to-[#0ab5d4] flex items-center justify-center  shadow-[0_0_18px_rgba(59,232,255,0.35)] ">
+                                <SiValorant size={17} color="#051c20" />
+                            </div>
+                            <span className="text-xl font-bold tracking-tight text-[#e8f8fa] "
+                                style={{ fontFamily: "'Syne',sans-serif" }}
+                            >
+                                Lumina UI
+                            </span>
+                        </motion.div>
+                        <p className="text-[10px] font-semibold tracking-[3px] text-[#3be8ff]  uppercase mb-4 sm:mb-5 ">
+                            How it works
 
+                        </p>
+                        <div className="flex sm:flex-col gap-2 sm:gap-1 overflow-x-auto sm:overflow-x-visible pb-2 sm:pb-0 -mx-1 px-1 ">
+                            {steps.map((item, i) => (
+                                <motion.div key={i}
+                                    className={`shrink-0 sm:shrink flex items-start gap-3 px-3 py-2.5 rounded-xl border transition-all duration-300 
+                                 min-w-50 sm:min-w-0 ${active === i ? "bg-[#3be8ff]/[0.07]  border-[#3be8ff]/20 " : "bg-transparent border-transparent"}  `}  >
+                                    <div className={`min-w-7 h-7  rounded-lg flex items-center justify-center border transition-all duration-300 ${ active === i ? "bg-linear-to-b from-[#3be8ff] to-[#ab8d6] border-transparent  " : " bg-[#3be8ff]/8 border-[#3be8ff]/20 "}   `} > <item.icon />
+                                    </div>
 
+                                </motion.div>
+                            )
+                            )}
+                        </div>
                     </div>
 
                     {/* right box  */}
