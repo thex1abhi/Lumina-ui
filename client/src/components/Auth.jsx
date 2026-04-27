@@ -4,7 +4,10 @@ import { TbCopy, TbDownload, TbLogin2, TbSettings, TbX } from "react-icons/tb"
 import { SiValorant } from "react-icons/si";
 import { HiSparkles } from "react-icons/hi2"
 import { FcGoogle } from "react-icons/fc"
-
+import { signInWithPopup } from "firebase/auth";
+import { auth, provider } from "../utils/firebase";
+import axios from "axios"
+import { ServerUrl } from "../App";
 const steps = [
     {
         icon: TbLogin2,
@@ -43,6 +46,21 @@ function Auth({ onclose }) {
     }, []);
 
 
+    const googleAuth = async () => {
+        try {
+            const response = await signInWithPopup(auth, provider)
+            let User = response.user
+            let name = User.displayName
+            let email = User.email
+            const result = await axios.post(ServerUrl + "/api/auth/google", {  name, email
+            }, { withCredentials: true })
+            console.log(result.data);
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     return (
         <AnimatePresence >
             < motion.div
@@ -60,7 +78,7 @@ function Auth({ onclose }) {
                  shadow-[0_40px_80px_rgba(0,0,0,0.8)] relative " >
 
                     <button className="absolute top-3 right-3 z-20 w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10  border border-white/10 flex items-center justify-center text-white/50 hover:text-white transition-all cursor-pointer" >
-                        <TbX size={15}  onClick={onclose} />
+                        <TbX size={15} onClick={onclose} />
                     </button>
                     {/* left box  */}
 
@@ -119,7 +137,7 @@ function Auth({ onclose }) {
                     {/* right box  */}
                     <motion.div
                         initial={{ opacity: 0, }}
-                        animate={{ opacity: 1,}}
+                        animate={{ opacity: 1, }}
                         transition={{ duration: 0.5, delay: 0.25 }}
                         className="sm:w-[48%]  bg-[#040f12] px-6 sm:px-10 py-8 sm:py-12 flex flex-col  justify-center items-center relative overflow-hidden ">
 
@@ -152,6 +170,7 @@ function Auth({ onclose }) {
                             </div>
 
                             <motion.button
+                                onClick={googleAuth}
                                 whileHover={{ y: -2, scale: 1.02 }}
                                 whileTap={{ scale: 0.98 }}
                                 className="w-full flex items-center justify-center gap-2.5 py-3.5 rounded-xl bg-white text-[#0a1a1d] font-semibold text-sm cursor-pointer border-none shadow-[0_4px_20px_rgba(0,0,0,0.3)] 
@@ -160,8 +179,8 @@ function Auth({ onclose }) {
                                 Continue with Google
                             </motion.button>
                             <p className="text-[11px] text-[#64919b]/45  mt-4 sm:mt-5  ">
-                                No account needed for npm.{" "} <span   onClick={onclose}
-                                className="text-[#3be8ff]/50 border-b border-[#3be8ff]/20 cursor-pointer hover:text-[#3be8ff]/80  transition-colors "> View Docs  </span>
+                                No account needed for npm.{" "} <span onClick={onclose}
+                                    className="text-[#3be8ff]/50 border-b border-[#3be8ff]/20 cursor-pointer hover:text-[#3be8ff]/80  transition-colors "> View Docs  </span>
                             </p>
                         </div>
                     </motion.div>
