@@ -8,6 +8,8 @@ import { signInWithPopup } from "firebase/auth";
 import { auth, provider } from "../utils/firebase";
 import axios from "axios"
 import { ServerUrl } from "../App";
+import { useDispatch } from "react-redux";
+import { setUserData } from "../redux/userSlice";
 const steps = [
     {
         icon: TbLogin2,
@@ -39,7 +41,7 @@ const steps = [
 
 function Auth({ onclose }) {
     const [active, setActive] = useState(0);
-
+    const dispatch = useDispatch();
     useEffect(() => {
         const id = setInterval(() => setActive(s => (s + 1) % steps.length), 2400)
         return () => clearInterval(id)
@@ -52,10 +54,11 @@ function Auth({ onclose }) {
             let User = response.user
             let name = User.displayName
             let email = User.email
-            const result = await axios.post(ServerUrl + "/api/auth/google", {  name, email
+            const result = await axios.post(ServerUrl + "/api/auth/google", {
+                name, email
             }, { withCredentials: true })
-            console.log(result.data);
-
+          dispatch(setUserData(result.data))
+        //    onClose() 
         } catch (error) {
             console.log(error)
         }
