@@ -3,7 +3,7 @@ import Auth from "../components/Auth.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import { SiValorant } from "react-icons/si";
 import { AnimatePresence, motion } from "motion/react"
-import { TbComponents, TbLogout, TbMenu, TbMenu2, TbX } from "react-icons/tb";
+import { TbCheck, TbComponents, TbCopy, TbLogout, TbMenu, TbMenu2, TbX } from "react-icons/tb";
 import { ServerUrl } from "../App.jsx";
 import { setUserData } from "../redux/userSlice.js";
 import { useNavigate } from "react-router-dom";
@@ -13,6 +13,8 @@ function Home() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [showAuth, setShowAuth] = useState(false);
+    const [copied, setCopied] = useState(false);
+
     const [profileOpen, setProfileOpen] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
 
@@ -30,6 +32,11 @@ function Home() {
             console.log(`Error in logout ${error}`)
         }
         setProfileOpen(false)
+    }
+    const handleCopy = () => {
+        navigator.clipboard.writeText(" npm install @yadavabhi/lumina-ui ")
+        setCopied(true)
+        setTimeout(() => setCopied(false), 2000);
     }
     return <div className="min-h-screen bg-[#040f12]" >
 
@@ -79,7 +86,7 @@ function Home() {
                                     transition={{ duration: 0.18 }}
                                     className="absolute right-0 mt-2 w-56 rounded-xl border border-[#3be8ff]/20 bg-[#03181c]/95 backdrop-blur-md shadow-[0_8px_32px_rgba(0,0,0,0.5)] z-50 overflow-hidden" >
                                     <div className="px-4 py-3 border-b border-[#3be8ff]/10">
-                                        <p className="font-semibold text-[#e8f8fa] text-sm"> {userData.name} </p> 
+                                        <p className="font-semibold text-[#e8f8fa] text-sm"> {userData.name} </p>
                                         <p className="text-[12px] text-[#3be8ff]/60"> {userData.email} </p>
                                     </div>
                                     <div className="p-2">
@@ -123,7 +130,7 @@ function Home() {
                 {menuOpen ? <TbX size={22} /> : <TbMenu2 size={22} />}
             </button>
 
-        </nav> 
+        </nav>
         {/* mobile menu  */}
         <AnimatePresence >
             {menuOpen && (
@@ -137,50 +144,94 @@ function Home() {
                     {userData ? (
                         <>
                             <div className="text-white flex items-center gap-3">
-                                <div className="  w-7 h-7  rounded-lg bg-linear-to-br from-[#3be8ff] to-[#0ab5d4] flex items-center justify-center text-[11px] font-bold text-[#051c20] shadow-[0_0_12px_rgba(59,232,255,0.3)]" >{getLetters(userData.name)}  
-                                    
+                                <div className="  w-7 h-7  rounded-lg bg-linear-to-br from-[#3be8ff] to-[#0ab5d4] flex items-center justify-center text-[11px] font-bold text-[#051c20] shadow-[0_0_12px_rgba(59,232,255,0.3)]" >{getLetters(userData.name)}
+
                                 </div>
-                            <span className="text-white/80" > {userData.name} </span>
-                            </div> 
-                            <button   
-                            onClick={()=>setMenuOpen(false)  } 
-                            className="w-full flex justify-center gap-3 px-3 py-1 rounded-lg text-[#3be8ff]/70 hover:text-[#3be8ff] transition-all duration-200 cursor-pointer" >
+                                <span className="text-white/80" > {userData.name} </span>
+                            </div>
+                            <button
+                                onClick={() => setMenuOpen(false)}
+                                className="w-full flex justify-center gap-3 px-3 py-1 rounded-lg text-[#3be8ff]/70 hover:text-[#3be8ff] transition-all duration-200 cursor-pointer" >
                                 <TbComponents size={16} className="text-[#3be8ff]/70" />
-                                            <span className="text-sm font-medium">My Components</span>
-                            </button> 
-                            <button onClick={()=>{setMenuOpen(false) ; handleLogout()  }}
-                                            className="w-full flex items-center justify-center gap-3 px-3 py-1 rounded-lg text-red-400/80 hover:text-red-400 transition-colors cursor-pointer duration-200" >
-                                            <TbLogout size={16} className="text-red-400/80" />
-                                            <span className="text-sm font-medium">Logout</span> 
-                                 </button>
+                                <span className="text-sm font-medium">My Components</span>
+                            </button>
+                            <button onClick={() => { setMenuOpen(false); handleLogout() }}
+                                className="w-full flex items-center justify-center gap-3 px-3 py-1 rounded-lg text-red-400/80 hover:text-red-400 transition-colors cursor-pointer duration-200" >
+                                <TbLogout size={16} className="text-red-400/80" />
+                                <span className="text-sm font-medium">Logout</span>
+                            </button>
 
 
                         </>
                     ) : (
                         <>
-                         <motion.button
-                        whileHover={{ scale: 1.03, }}
-                        whileTap={{ scale: 0.95 }}
-                        onClick={() => setShowAuth(true)}
-                        className="px-2 whitespace-nowrap py-2 rounded-lg bg-[#3be8ff] text-[#051c20] text-sm font-semibold hover:shadow-[0_8px_24px_rgba(59,232,255,0.3)] transition-all duration-300 cursor-pointer">
-                        Generate AI component
-                    </motion.button>
+                            <motion.button
+                                whileHover={{ scale: 1.03, }}
+                                whileTap={{ scale: 0.95 }}
+                                onClick={() => setShowAuth(true)}
+                                className="px-2 whitespace-nowrap py-2 rounded-lg bg-[#3be8ff] text-[#051c20] text-sm font-semibold hover:shadow-[0_8px_24px_rgba(59,232,255,0.3)] transition-all duration-300 cursor-pointer">
+                                Generate AI component
+                            </motion.button>
 
                         </>
-                        
+
                     )
                     }
                 </motion.div>
             )
             }
-        </AnimatePresence> 
+        </AnimatePresence>
 
 
         <AnimatePresence>
             {showAuth && <Auth onclose={() => setShowAuth(false)} />}
-        </AnimatePresence> 
+        </AnimatePresence>
 
-      
+        <section className="relative  text-white max-w-5xl mx-auto px-4 sm:px-6  pt-16 sm:pt-24 pb-12 sm:pb-20  text-center "  >
+            <motion.div
+                initial={{ opacity: 0, y: -22 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.05, duration: 0.6 }}
+                className="inline-flex items-center gap-2 text-[10px] font-semibold tracking-[2.5px]
+                 uppercase text-[#3be8ff]/70 border border-[#3be8ff]/20 bg-[#3be8ff]/[0.05] rounded-full px-4 py-1.5 mb-6 sm:mb-7 ">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#3be8ff] animate-pulse " />
+                AI-Powered React UI library
+            </motion.div>
+            <motion.h1
+                initial={{ opacity: 0, y: -22 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.12, duration: 0.6 }}
+                className="text-4xl sm:text-5xl  lg:text-6xl font-bold leading-[1.08]  tracking-tight mb-5 sm:mb-6  " style={{ fontFamily: " 'Syne','sans-serif' " }} >
+                Build React UI <br />
+                <span className="text-transparent bg-clip-text bg-linear-to-r from-[#3be8ff] to-[#0ab5d4] " >Faster with AI </span>
+            </motion.h1>
+            <motion.p
+                initial={{ opacity: 0, y: 22 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.12, duration: 0.6 }}
+                className="text-white/50 text-base sm:text-lg  max-w-xl mx-auto leading-relaxed  mb-8  sm:mb-10 font-light px-2">
+                Use prebuilt LuminaUI components or generate custom ones with AI <br /> Copy clean JSX directly into your project in seconds
+            </motion.p>
+
+            <motion.div
+                initial={{ opacity: 0, y: 22 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.27, duration: 0.6 }}
+                className="flex justify-center mb-7 sm:mb-8 px-2  ">
+                <div className="flex items-center gap-2 sm:gap-3 bg-white/4  border border-white/10 rounded-xl px-4 sm:px-5 py-3 text-xs sm:text-sm font-mono w-full max-w-xs sm:max-w-fit ">
+                    <span className="text-[#3be8ff]/60">$ </span>
+                    <span className="text-white/80 truncate"> npm install @yadavabhi/lumina-ui </span>
+                    <button  
+                    onClick={handleCopy}
+                    className="ml-1 text-white/30 hover:text-[#3be8ff] transition-colors cursor-pointer bg-transparent border-none shrink-0">
+                        {copied ? <TbCheck size={15} className="text-[#3be8ff]" /> : <TbCopy size={15} />}
+                    </button>
+                </div>
+            </motion.div>
+
+
+
+        </section>
 
     </div>;
 }
