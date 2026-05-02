@@ -57,8 +57,8 @@ function Auth({ onclose }) {
             const result = await axios.post(ServerUrl + "/api/auth/google", {
                 name, email
             }, { withCredentials: true })
-          dispatch(setUserData(result.data))
-        //    onClose() 
+            dispatch(setUserData(result.data))
+            onclose()
         } catch (error) {
             console.log(error)
         }
