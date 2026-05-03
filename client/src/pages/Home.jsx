@@ -45,7 +45,7 @@ function Home() {
 
         <div className="absolute -bottom-32 -left-32 w-96 h-96 rounded-full bg-[radial-gradient(circle,rgba(59,232,255,0.05)_0%,transparent_70%)] pointer-events-none" />
 
-        <nav className="flex items-center justify-between px-6 sm:px-10 py-4 sm:py-3 relative z-10 border-b border-[#3be8ff]/10 backdrop-blur-md bg-[#040f12]/50" > 
+        <nav className="flex items-center justify-between px-6 sm:px-10 py-4 sm:py-3 relative z-10 border-b border-[#3be8ff]/10 backdrop-blur-md bg-[#040f12]/50" >
             <motion.div
                 initial={{ opacity: 0, x: -14 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -221,15 +221,26 @@ function Home() {
                 <div className="flex items-center gap-2 sm:gap-3 bg-white/4  border border-white/10 rounded-xl px-4 sm:px-5 py-3 text-xs sm:text-sm font-mono w-full max-w-xs sm:max-w-fit ">
                     <span className="text-[#3be8ff]/60">$ </span>
                     <span className="text-white/80 truncate"> npm install @yadavabhi/lumina-ui </span>
-                    <button  
-                    onClick={handleCopy}
-                    className="ml-1 text-white/30 hover:text-[#3be8ff] transition-colors cursor-pointer bg-transparent border-none shrink-0">
+                    <button
+                        onClick={handleCopy}
+                        className="ml-1 text-white/30 hover:text-[#3be8ff] transition-colors cursor-pointer bg-transparent border-none shrink-0">
                         {copied ? <TbCheck size={15} className="text-[#3be8ff]" /> : <TbCopy size={15} />}
                     </button>
                 </div>
             </motion.div>
+            <motion.div
+                initial={{ opacity: 0, y: 22 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.27, duration: 0.6 }}
+                className="flex flex-col sm:flex-row justify-center gap-3 px-4 sm:px-0">
+                <motion.button className=" flex items-center justify-center gap-2 px-6 sm:p-7 bg-white text-[#030b0d] rounded-xl font-semibold text-sm cursor-pointer border-nono shadow-[0_4px_24px_rgba(255,255,255,0.1)] hover:shadow-[0_6px_32px_rgba(255,255,255,0.18)] transition-shadow w-full sm:w-auto  ">
 
+                </motion.button>
 
+                <motion.button className="">
+
+                </motion.button>
+            </motion.div>
 
         </section>
 
