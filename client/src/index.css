@@ -1,5 +1,16 @@
 @import "tailwindcss";
 
+html,
+body,
+#root {
+    overflow-x: hidden;
+    min-width: 100vw;
+}
+
+body {
+    margin: 0;
+}
+
 ::-webkit-scrollbar {
     display: none;
 }

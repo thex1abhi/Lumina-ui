@@ -38,14 +38,14 @@ function Home() {
         setCopied(true)
         setTimeout(() => setCopied(false), 2000);
     }
-    return <div className="min-h-screen bg-[#040f12]" >
+    return <div className="relative min-h-screen w-screen bg-[#040f12] overflow-x-hidden" >
 
 
         <div className="absolute -top-16 -right-16 w-64 h-64 rounded-full bg-[radial-gradient(circle,rgba(59,232,255,0.08)_0%,transparent_70%)] pointer-events-none" />
 
         <div className="absolute -bottom-32 -left-32 w-96 h-96 rounded-full bg-[radial-gradient(circle,rgba(59,232,255,0.05)_0%,transparent_70%)] pointer-events-none" />
 
-        <nav className="flex items-center justify-between px-6 sm:px-10 py-4 sm:py-6 relative z-10 border-b border-[#3be8ff]/10 backdrop-blur-md bg-[#040f12]/50" >
+        <nav className="flex items-center justify-between px-6 sm:px-10 py-4 sm:py-3 relative z-10 border-b border-[#3be8ff]/10 backdrop-blur-md bg-[#040f12]/50" > 
             <motion.div
                 initial={{ opacity: 0, x: -14 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -187,7 +187,7 @@ function Home() {
             {showAuth && <Auth onclose={() => setShowAuth(false)} />}
         </AnimatePresence>
 
-        <section className="relative  text-white max-w-5xl mx-auto px-4 sm:px-6  pt-16 sm:pt-24 pb-12 sm:pb-20  text-center "  >
+        <section className="relative  text-white max-w-5xl mx-auto px-4 sm:px-6  pt-12 sm:pt-18 pb-12 sm:pb-20  text-center "  >
             <motion.div
                 initial={{ opacity: 0, y: -22 }}
                 animate={{ opacity: 1, y: 0 }}
