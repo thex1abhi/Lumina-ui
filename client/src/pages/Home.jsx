@@ -3,11 +3,12 @@ import Auth from "../components/Auth.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import { SiValorant } from "react-icons/si";
 import { AnimatePresence, motion } from "motion/react"
-import { TbCheck, TbComponents, TbCopy, TbLogout, TbMenu, TbMenu2, TbX } from "react-icons/tb";
+import { TbArrowRight, TbCheck, TbComponents, TbCopy, TbLogout, TbMenu, TbMenu2, TbX } from "react-icons/tb";
 import { ServerUrl } from "../App.jsx";
 import { setUserData } from "../redux/userSlice.js";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { HiSparkles } from "react-icons/hi2";
 
 function Home() {
     const navigate = useNavigate();
@@ -38,6 +39,16 @@ function Home() {
         setCopied(true)
         setTimeout(() => setCopied(false), 2000);
     }
+
+    const handleGenerateClick = () => {
+        if (userData) {
+            navigate("/generate")
+
+        } else {
+            setShowAuth(true)
+        }
+    }
+
     return <div className="relative min-h-screen w-screen bg-[#040f12] overflow-x-hidden" >
 
 
@@ -116,8 +127,8 @@ function Home() {
                         whileHover={{ scale: 1.03, }}
                         whileTap={{ scale: 0.95 }}
                         onClick={() => setShowAuth(true)}
-                        className="px-2 whitespace-nowrap py-2 rounded-lg bg-[#3be8ff] text-[#051c20] text-sm font-semibold hover:shadow-[0_8px_24px_rgba(59,232,255,0.3)] transition-all duration-300 cursor-pointer">
-                        Generate AI component
+                        className="px-2  flex  items-center gap-2 whitespace-nowrap py-2 rounded-lg bg-[#3be8ff] text-[#051c20] text-sm font-semibold hover:shadow-[0_8px_24px_rgba(59,232,255,0.3)] transition-all duration-300 cursor-pointer">
+                        <HiSparkles size={14} />   Generate AI component
                     </motion.button>
                 )}
 
@@ -229,17 +240,57 @@ function Home() {
                 </div>
             </motion.div>
             <motion.div
+
                 initial={{ opacity: 0, y: 22 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.27, duration: 0.6 }}
                 className="flex flex-col sm:flex-row justify-center gap-3 px-4 sm:px-0">
-                <motion.button className=" flex items-center justify-center gap-2 px-6 sm:p-7 bg-white text-[#030b0d] rounded-xl font-semibold text-sm cursor-pointer border-nono shadow-[0_4px_24px_rgba(255,255,255,0.1)] hover:shadow-[0_6px_32px_rgba(255,255,255,0.18)] transition-shadow w-full sm:w-auto  ">
-
+                <motion.button
+                    whilehover={{ y: -2 }}
+                    whileTap={{ scale: 0.97 }}
+                    className=" flex items-center justify-center gap-2 px-6 sm:px-7 py-3.5 bg-white text-[#030b0d] rounded-xl font-semibold text-sm cursor-pointer border-none shadow-[0_4px_24px_rgba(255,255,255,0.1)] hover:shadow-[0_6px_32px_rgba(255,255,255,0.18)] transition-shadow w-full sm:w-auto  ">
+                    Get started <TbArrowRight size={15} />
                 </motion.button>
 
-                <motion.button className="">
+                <motion.button
+                    whilehover={{ y: -2 }}
+                    whileTap={{ scale: 0.97 }}
+                    onClick={handleGenerateClick}
+                    className="flex items-center justify-center gap-2 px-6 sm:px-7 py-3.5 border border-white/15 rounded-xl text-sm text-white/70 hover:text-white hover:border-white/25 transition-all cursor-pointer bg-transparent w-full sm:w-auto ">
+                    <HiSparkles size={14} /> Generate AI components
 
                 </motion.button>
+            </motion.div>
+
+            <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.05, duration: 0.7 }}
+                className="mt-12 sm:mt-16 mx-auto max-w-2xl bg-[#0a1a1e]/80  border border-white/[0.07] rounded-2xl p-4 sm:p-5 text-left shadow-[0_30px_60px_rgba(0,0,0,0.4)]  backdrop-blur-sm overflow-x-auto ">
+                <div className="flex items-center gap-1.5 mb-4 ">
+                    <div className="w-2.5 h-2.5 rounded-full bg-[#ff5f57]  " />
+                    <div className="w-2.5 h-2.5 rounded-full bg-[#febc2e]" />
+                    <div className="w-2.5 h-2.5 rounded-full bg-[#28c840]" />
+                    <span className="ml-3 text-[11px] text-white/20 font-mono ">
+                        App.jsx</span>
+
+                </div>
+                <div className="font-mono text-[11px] sm:text-[12.5px] leading-6 space-y-0.5 
+                 min-w-70 ">
+                    <p className="">
+                        <span className="text-[#3be8ff]/60">import  </span>
+                        <span className="text-white/80"> {"{Button , Card}"} </span>
+                        <span className="text-[#3be8ff]/60"> from  </span>
+                        <span className="text-[#aaff80]/70">@yadavabhi/lumina-ui </span>
+                        <span className="text-white/30"> ;</span>
+                    </p>
+                    <p> {" "} </p>
+                    <p className="">
+                        <span className="">export default function </span>
+                        <span className="">App</span>
+                        <span className=""> (){" "} </span>
+                    </p>
+                </div>
             </motion.div>
 
         </section>
