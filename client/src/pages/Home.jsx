@@ -3,12 +3,48 @@ import Auth from "../components/Auth.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import { SiValorant } from "react-icons/si";
 import { AnimatePresence, motion } from "motion/react"
-import { TbArrowRight, TbCheck, TbComponents, TbCopy, TbLogout, TbMenu, TbMenu2, TbX } from "react-icons/tb";
+import { TbAdjustments, TbArrowRight, TbBrandNpm, TbCheck, TbCode, TbComponents, TbCopy, TbLayout, TbLogout, TbMenu, TbMenu2, TbPlayerPlay, TbX } from "react-icons/tb";
 import { ServerUrl } from "../App.jsx";
 import { setUserData } from "../redux/userSlice.js";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { HiSparkles } from "react-icons/hi2";
+
+const features = [
+    {
+        icon: TbLayout,
+        title: "Prebuilt UI Components",
+        text: "Install LuminaUI and use ready-made, production-grade components instantly.",
+    },
+    {
+        icon: HiSparkles,
+        title: "AI Component Generator",
+        text: "Describe your UI in plain English and generate React components in seconds.",
+    },
+    {
+        icon: TbAdjustments,
+        title: "Customizable Props",
+        text: "Modify component props and preview changes in real-time without rebuilding.",
+    },
+    {
+        icon: TbCode,
+        title: "Clean JSX Code",
+        text: "Copy production-ready JSX directly into your project zero boilerplate.",
+    },
+    {
+        icon: TbBrandNpm,
+        title: "NPM Library",
+        text: "Import LuminaUI components with a simple npm install command.",
+    },
+    {
+        icon: TbPlayerPlay,
+        title: "Live Preview",
+        text: "Instantly preview AI-generated components before exporting your code.",
+    },
+];
+
+
+
 
 function Home() {
     const navigate = useNavigate();
@@ -204,7 +240,7 @@ function Home() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.05, duration: 0.6 }}
                 className="inline-flex items-center gap-2 text-[10px] font-semibold tracking-[2.5px]
-                 uppercase text-[#3be8ff]/70 border border-[#3be8ff]/20 bg-[#3be8ff]/[0.05] rounded-full px-4 py-1.5 mb-6 sm:mb-7 ">
+                 uppercase text-[#3be8ff]/70 border border-[#3be8ff]/20 bg-[#3be8ff]/5 rounded-full px-4 py-1.5 mb-6 sm:mb-7 ">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#3be8ff] animate-pulse " />
                 AI-Powered React UI library
             </motion.div>
@@ -273,7 +309,6 @@ function Home() {
                     <div className="w-2.5 h-2.5 rounded-full bg-[#28c840]" />
                     <span className="ml-3 text-[11px] text-white/20 font-mono ">
                         App.jsx</span>
-
                 </div>
                 <div className="font-mono text-[11px] sm:text-[12.5px] leading-6 space-y-0.5 
                  min-w-70 ">
@@ -286,14 +321,47 @@ function Home() {
                     </p>
                     <p> {" "} </p>
                     <p className="">
-                        <span className="">export default function </span>
-                        <span className="">App</span>
-                        <span className=""> (){" "} </span>
+                        <span className="text-[#3be8ff]/60">export default function </span>
+                        <span className="text-yellow-300">App</span>
+                        <span className=""> (){"{"} </span>
                     </p>
+                    <p> <span className="text-white/30"> {"return ("} </span> </p>
+                    <p> <span className="text-white/30"> {"<"}  </span> <span className="text-[#3be8ff]/70">  Card </span>
+                        <span className="text-[#aaff80]/60">  title </span>
+                        <span className=" text-white/30" > {"="} </span>
+                        <span className="text-[##aaff80]/60"> {"\"Dashboard\""} </span>
+                        <span className="text-white/30">  {"/>"}  </span>
+                    </p>
+                    <p> <span className="text-white/30"> {"<"}  </span> <span className="text-[#3be8ff]/70">  Button </span>
+                        <span className="text-[#aaff80]/60">  text </span>
+                        <span className=" text-white/30" > {"="} </span>
+                        <span className="text-[##aaff80]/60"> {"\"hello\""} </span>
+                        <span className="text-white/30">  {"/>"}  </span>
+                    </p>
+                    <p className="">
+                        <span className="text-white/30"> {"</"} </span>
+                        <span className="text-[#3be8ff]/70">Card</span>
+                        <span className="text-white/30">{" >"}</span>
+                    </p>
+                    <p> <span className="text-white/30" > {" );"} </span> </p>
+                    <p> <span className="text-white/50" > {"}"} </span> </p>
                 </div>
             </motion.div>
-
         </section>
+
+        <section className="max-w-6xl  mx-auto px-4 sm:px-6 py-16 sm:py-24 ">
+            <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5 }}
+                className="text-center mb-10 sm:mb-14" >
+                <p className="text-[10px] font-semibold tracking-[3px] uppercase text-[#3be8ff]/60 mb-3  "  >  </p>
+                <h2></h2>
+
+            </motion.div>
+        </section>
+
 
     </div>;
 }
