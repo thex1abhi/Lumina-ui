@@ -356,10 +356,24 @@ function Home() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5 }}
                 className="text-center mb-10 sm:mb-14" >
-                <p className="text-[10px] font-semibold tracking-[3px] uppercase text-[#3be8ff]/60 mb-3  "  >  </p>
-                <h2></h2>
+                <p className="text-[10px] font-semibold tracking-[3px] uppercase text-[#3be8ff]/60 mb-3  "   > What's inside </p>
+                <h2 className="text-3xl sm:text-4xl text-white font-bold tracking-tight" style={{ fontFamily: "'Syne',sans-serif" }} >
+                    Everything you need
+                </h2>
+
+
 
             </motion.div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3  gap-4 ">
+                {features.map((item, index) => {
+                    <motion.div  key={index} 
+                    className="group p-5 sm:p-6 rounded-2xl border border-white/[0.07] bg-white/[0.02] hover:bg-[#3be8ff]/[0.04] hover:border-[#3be8ff]/20  transition-all duration-300  "
+                    >  
+                  
+
+                    </motion.div>
+                })}
+            </div>
         </section>
 
 
