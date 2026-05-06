@@ -41,6 +41,28 @@ const features = [
         title: "Live Preview",
         text: "Instantly preview AI-generated components before exporting your code.",
     },
+]; 
+const steps = [
+  {
+    n: "01",
+    title: "Install Library",
+    text: "npm install @yadavabhi/lumina-ui to access all prebuilt UI components."
+  },
+  {
+    n: "02",
+    title: "Use Components",
+    text: "Import and customize with props for any design requirement."
+  },
+  {
+    n: "03",
+    title: "Generate with AI",
+    text: "Describe your UI and let AI build the component for you."
+  },
+  {
+    n: "04",
+    title: "Copy & Use",
+    text: "Paste the clean JSX code straight into your project."
+  }
 ];
 
 
@@ -365,15 +387,57 @@ function Home() {
 
             </motion.div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3  gap-4 ">
-                {features.map((item, index) => {
-                    <motion.div  key={index} 
-                    className="group p-5 sm:p-6 rounded-2xl border border-white/[0.07] bg-white/[0.02] hover:bg-[#3be8ff]/[0.04] hover:border-[#3be8ff]/20  transition-all duration-300  "
-                    >  
-                  
+                {features.map((item, index) => (
+                    <motion.div
+                        key={index}
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: index * 0.1, duration: 0.5 }}
+                        className="group p-5 sm:p-6 rounded-2xl border border-white/[0.07] bg-white/[0.02] hover:bg-[#3be8ff]/[0.04] hover:border-[#3be8ff]/20 transition-all duration-300"
+                    >
+                        <div className="flex items-center justify-center gap-3">
+                            <item.icon className="w-8 h-8 text-[#3be8ff] mb-4" />
+                            <h3 className="text-lg font-semibold text-white mb-2">{item.title}</h3>
+                        </div>
 
+                        <p className="text-white/60 text-sm leading-relaxed">{item.text}</p>
                     </motion.div>
-                })}
-            </div>
+                ))}
+            </div>  
+            <div className="mt-14 sm:mt-12">
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5 }}
+                className="text-center mb-10 sm:mb-14" >
+                <p className="text-[10px] font-semibold tracking-[3px] uppercase text-[#3be8ff]/60 mb-3  "   > Simple Process</p>
+                <h2 className="text-3xl sm:text-4xl text-white font-bold tracking-tight" style={{ fontFamily: "'Syne',sans-serif" }} >
+                    How it works
+                </h2> 
+              </motion.div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {steps.map((step, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.1, duration: 0.5 }}
+                    className="flex items-start gap-4 p-6 rounded-2xl border border-white/[0.07] bg-white/[0.02] hover:bg-[#3be8ff]/[0.04] hover:border-[#3be8ff]/20 transition-all duration-300"
+                  >
+                    <div className="flex-shrink-0 w-12 h-12 rounded-full bg-[#3be8ff]/10 border border-[#3be8ff]/20 flex items-center justify-center text-[#3be8ff] font-bold text-lg">
+                      {step.n}
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-semibold text-white mb-2">{step.title}</h3>
+                      <p className="text-white/60 text-sm leading-relaxed">{step.text}</p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div> 
         </section>
 
 
