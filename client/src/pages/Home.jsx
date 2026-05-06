@@ -41,28 +41,28 @@ const features = [
         title: "Live Preview",
         text: "Instantly preview AI-generated components before exporting your code.",
     },
-]; 
+];
 const steps = [
-  {
-    n: "01",
-    title: "Install Library",
-    text: "npm install @yadavabhi/lumina-ui to access all prebuilt UI components."
-  },
-  {
-    n: "02",
-    title: "Use Components",
-    text: "Import and customize with props for any design requirement."
-  },
-  {
-    n: "03",
-    title: "Generate with AI",
-    text: "Describe your UI and let AI build the component for you."
-  },
-  {
-    n: "04",
-    title: "Copy & Use",
-    text: "Paste the clean JSX code straight into your project."
-  }
+    {
+        n: "01",
+        title: "Install Library",
+        text: "npm install @yadavabhi/lumina-ui to access all prebuilt UI components."
+    },
+    {
+        n: "02",
+        title: "Use Components",
+        text: "Import and customize with props for any design requirement."
+    },
+    {
+        n: "03",
+        title: "Generate with AI",
+        text: "Describe your UI and let AI build the component for you."
+    },
+    {
+        n: "04",
+        title: "Copy & Use",
+        text: "Paste the clean JSX code straight into your project."
+    }
 ];
 
 
@@ -404,41 +404,63 @@ function Home() {
                         <p className="text-white/60 text-sm leading-relaxed">{item.text}</p>
                     </motion.div>
                 ))}
-            </div>  
+            </div>
             <div className="mt-14 sm:mt-12">
-              <motion.div
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5 }}
-                className="text-center mb-10 sm:mb-14" >
-                <p className="text-[10px] font-semibold tracking-[3px] uppercase text-[#3be8ff]/60 mb-3  "   > Simple Process</p>
-                <h2 className="text-3xl sm:text-4xl text-white font-bold tracking-tight" style={{ fontFamily: "'Syne',sans-serif" }} >
-                    How it works
-                </h2> 
-              </motion.div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {steps.map((step, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 20 }}
+                <motion.div
+                    initial={{ opacity: 0, y: 16 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    transition={{ delay: index * 0.1, duration: 0.5 }}
-                    className="flex items-start gap-4 p-6 rounded-2xl border border-white/[0.07] bg-white/[0.02] hover:bg-[#3be8ff]/[0.04] hover:border-[#3be8ff]/20 transition-all duration-300"
-                  >
-                    <div className="flex-shrink-0 w-12 h-12 rounded-full bg-[#3be8ff]/10 border border-[#3be8ff]/20 flex items-center justify-center text-[#3be8ff] font-bold text-lg">
-                      {step.n}
+                    transition={{ duration: 0.5 }}
+                    className="text-center mb-10 sm:mb-14" >
+                    <p className="text-[10px] font-semibold tracking-[3px] uppercase text-[#3be8ff]/60 mb-3  "   > Simple Process</p>
+                    <h2 className="text-3xl sm:text-4xl text-white font-bold tracking-tight" style={{ fontFamily: "'Syne',sans-serif" }} >
+                        How it works
+                    </h2>
+                </motion.div>
+
+
+                <div className="w-full py-20  text-white relative overflow-hidden">
+                    
+                    <div className="max-w-6xl mx-auto px-4 text-center relative z-10">
+                        <p className="text-[#3be8ff]/70 text-sm tracking-widest mb-2">
+                            SIMPLE PROCESS
+                        </p>
+                        <h2 className="text-3xl md:text-4xl font-bold mb-16">
+                            How it works
+                        </h2>
+                        <div className="relative">
+                            <div className="hidden md:block absolute top-5 left-0 w-full h-[1px] bg-[#3be8ff]/20"></div>
+
+                            <div className="flex flex-col md:flex-row items-center justify-between gap-10 md:gap-4">
+                                {steps.map((step, index) => (
+                                    <motion.div
+                                        key={index}
+                                        initial={{ opacity: 0, y: 30 }}
+                                        whileInView={{ opacity: 1, y: 0 }}
+                                        transition={{ delay: index * 0.15 }}
+                                        viewport={{ once: true }}
+                                        className="flex flex-col items-center text-center max-w-xs"
+                                    >
+                                        <div className="relative z-10 mb-6">
+                                            <div className="w-10 h-10 rounded-xl bg-[#3be8ff]/10 border border-[#3be8ff]/30 backdrop-blur-md flex items-center justify-center text-[#3be8ff] font-semibold shadow-[0_0_20px_rgba(59,232,255,0.2)]">
+                                                {step.n}
+                                            </div>
+                                        </div>
+                                        <h3 className="text-base font-semibold mb-2">
+                                            {step.title}
+                                        </h3>
+                                        <p className="text-white/60 text-sm leading-relaxed">
+                                            {step.text}
+                                        </p>
+                                    </motion.div>
+                                ))}
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                      <h3 className="text-xl font-semibold text-white mb-2">{step.title}</h3>
-                      <p className="text-white/60 text-sm leading-relaxed">{step.text}</p>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </div> 
+                </div>
+            </div>
         </section>
+
 
 
     </div>;
