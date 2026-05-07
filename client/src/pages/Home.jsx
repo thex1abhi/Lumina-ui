@@ -406,28 +406,23 @@ function Home() {
                 ))}
             </div>
             <div className="mt-14 sm:mt-12">
-                <motion.div
-                    initial={{ opacity: 0, y: 16 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5 }}
-                    className="text-center mb-10 sm:mb-14" >
-                    <p className="text-[10px] font-semibold tracking-[3px] uppercase text-[#3be8ff]/60 mb-3  "   > Simple Process</p>
-                    <h2 className="text-3xl sm:text-4xl text-white font-bold tracking-tight" style={{ fontFamily: "'Syne',sans-serif" }} >
-                        How it works
-                    </h2>
-                </motion.div>
 
 
-                <div className="w-full py-20  text-white relative overflow-hidden">
-                    
+
+                <div className="w-full py-8  text-white relative overflow-hidden">
+
                     <div className="max-w-6xl mx-auto px-4 text-center relative z-10">
-                        <p className="text-[#3be8ff]/70 text-sm tracking-widest mb-2">
-                            SIMPLE PROCESS
-                        </p>
-                        <h2 className="text-3xl md:text-4xl font-bold mb-16">
-                            How it works
-                        </h2>
+                        <motion.div
+                            initial={{ opacity: 0, y: 16 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.5 }}
+                            className="text-center mb-10 sm:mb-14" >
+                            <p className="text-[10px] font-semibold tracking-[3px] uppercase text-[#3be8ff]/60 mb-3  "   > Simple Process</p>
+                            <h2 className="text-3xl sm:text-4xl text-white font-bold tracking-tight" style={{ fontFamily: "'Syne',sans-serif" }} >
+                                How it works
+                            </h2>
+                        </motion.div>
                         <div className="relative">
                             <div className="hidden md:block absolute top-5 left-0 w-full h-[1px] bg-[#3be8ff]/20"></div>
 
@@ -461,6 +456,52 @@ function Home() {
             </div>
         </section>
 
+        <section className="max-w-5xl mx-auto px-4 sm:px-6 pb-16 sm:pb-24  ">
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.06 }}
+                viewport={{ once: true }}
+                className="relative rounded-2xl sm:rounded-3xl  border  border-[#3be8ff]/15 bg-linear-to-br from-[#071518] to-[#040f12]  p-8 sm:p-14 text-center overflow-hidden">
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_0%,rgba(59,232,255,0.08)_0%,transparent_60%)] pointer-events-none " >   </div>
+                <div className="relative z-10">
+                    <p className="text-[10px] font-semibold tracking-[3px] uppercase text-[#3be8ff]/60 mb-3 sm:mb-4  "> start building </p>
+                    <h3 className="text-3xl sm:text-4xl font-bold tracking-tight mb-3 sm:mb-4   "
+                        style={{ fontFamily: "'Syne',sans-serif" }}
+                    >Ready to generate  <br /> your new component ? </h3>
+                    {userData ? (
+                        <>
+                            <p className="text-white/40 mb-7 sm:mb-8 text-sm  max-w-md mx-auto leading-relaxed "
+                            > Welcome back,  <span className="text-[#3be8ff]/70"> {userData.name}
+                                </span>! Continue building amazing components
+                            </p>
+                            <div className="flex flex-col sm:flex-row justify-center gap-3 ">
+                                <motion.button
+                                    whilehover={{ y: -2, scale: 1.02 }}
+                                    whileTap={{ scale: 0.98 }}
+                                    className="flex items-center justify-center gap-2 bg-[#3be8ff] text-[#030b0d] px-7 py-3.5 rounded-xl font-semibold text-sm cursor-pointer  border-none shadow-[0_0_30px_rgba(59,232,255,0.3)] hover:shadow-[0_0_40px_rgba(59,232,255,0.45)]  transition-shadow   ">
+                                    <HiSparkles size={15} />   Generate AI component
+                                </motion.button>
+                                <motion.button
+                                    whilehover={{ y: -2 }}
+                                    whileTap={{ scale: 0.98 }}
+                                    className="flex items-center justify-center gap-2  px-7 py-3.5  
+                                    border border-white/15 rounded-xl text-sm text-white/60 hover:text-white  hover:border-white/25 transition-all cursor-pointer bg-transparent   ">
+                                    <TbComponents size={16} className="text-[#3be8ff]/70" />
+                                    My Components
+                                </motion.button>
+                            </div>
+                        </>
+                    ) : (
+                        <>
+
+                        </>
+                    )}
+
+                </div>
+            </motion.div>
+
+        </section>
 
 
     </div>;
