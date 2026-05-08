@@ -494,6 +494,26 @@ function Home() {
                         </>
                     ) : (
                         <>
+                            <p className="text-white/40 mb-7 sm:mb-8 text-sm max-w-md mx-auto leading-relaxed" >
+                                Sign in with Google, Get 150 free AI credit , and start generating production-ready UI components  instantly.
+                            </p>
+                            <div className="flex flex-col sm:flex-row justify-center gap-3 ">
+                                <motion.button
+                                    whilehover={{ y: -2, scale: 1.02 }}
+                                    whileTap={{ scale: 0.98 }}
+                                    onClick={() => setShowAuth(true)}
+                                    className="flex items-center justify-center gap-2 bg-[#3be8ff] text-[#030b0d] px-7 py-3.5 rounded-xl font-semibold text-sm cursor-pointer  border-none shadow-[0_0_30px_rgba(59,232,255,0.3)] hover:shadow-[0_0_40px_rgba(59,232,255,0.45)]  transition-shadow   ">
+                                    <HiSparkles size={15} />   Get Started Free
+                                </motion.button>
+                                <motion.button
+                                    whilehover={{ y: -2 }}
+                                    whileTap={{ scale: 0.98 }}
+                                    className="flex items-center justify-center gap-2  px-7 py-3.5  
+                                    border border-white/15 rounded-xl text-sm text-white/60 hover:text-white  hover:border-white/25 transition-all cursor-pointer bg-transparent   ">
+                                    <TbComponents size={16} className="text-[#3be8ff]/70" />
+                                    Components
+                                </motion.button>
+                            </div>
 
                         </>
                     )}
@@ -502,6 +522,11 @@ function Home() {
             </motion.div>
 
         </section>
+
+        {/* footer  */}
+        <footer className="border-t border-white/[0.05] py-8 sm:py-10  ">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-0  "></div>
+        </footer>
 
 
     </div>;
