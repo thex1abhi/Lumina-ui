@@ -14,13 +14,13 @@ export const generateComponent = async (req, res) => {
             }
             user.aiCredits -= 50
             await user.save()
-        } 
+        }
         // Propmt for generate component controller
 
-const messages = [
-  {
-    role: "system",
-    content: `You are a React component generator. Output ONLY a valid JSON object. No markdown, no backticks, no explanation.
+        const messages = [
+            {
+                role: "system",
+                content: `You are a React component generator. Output ONLY a valid JSON object. No markdown, no backticks, no explanation.
 
 CRITICAL: Your entire response must be parseable by JSON.parse(). Start with { and end with }.
 
@@ -75,19 +75,35 @@ OUTPUT FORMAT:
 
 --- EXAMPLE 4: Navbar ---
 {"name":"Navbar","code":"import React, { useState, useEffect } from \\"react\\";\\n\\nexport const Navbar = ({\\n  logo = \\"VirtualAI\\",\\n  links = [\\"Home\\", \\"Features\\", \\"Pricing\\", \\"Blog\\"],\\n  ctaText = \\"Get Started\\",\\n  accent = \\"#6366f1\\",\\n  bg = \\"#0f172a\\",\\n  onCtaClick = () => {},\\n  onLinkClick = () => {}\\n}) => {\\n  const [active, setActive] = useState(\\"Home\\");\\n  const [isMobile, setIsMobile] = useState(false);\\n  const alpha = (hex, op) => {\\n    const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);\\n    return \\"rgba(\\" + r + \\",\\" + g + \\",\\" + b + \\",\\" + op + \\")\\";\\n  };\\n  useEffect(() => {\\n    const check = () => setIsMobile(window.innerWidth < 768);\\n    check();\\n    window.addEventListener(\\"resize\\", check);\\n    return () => window.removeEventListener(\\"resize\\", check);\\n  }, []);\\n  return (\\n    <nav style={{ background: bg, borderBottom: \\"1px solid rgba(255,255,255,0.06)\\", fontFamily: \\"system-ui,sans-serif\\", width: \\"100%\\", boxSizing: \\"border-box\\", borderRadius: \\"12px\\" }}>\\n      <div style={{ maxWidth: \\"1100px\\", margin: \\"0 auto\\", padding: \\"0 20px\\", height: \\"60px\\", display: \\"flex\\", alignItems: \\"center\\", justifyContent: \\"space-between\\" }}>\\n        <div style={{ display: \\"flex\\", alignItems: \\"center\\", gap: \\"8px\\", cursor: \\"pointer\\" }}>\\n          <div style={{ width: \\"28px\\", height: \\"28px\\", borderRadius: \\"8px\\", background: \\"linear-gradient(135deg, \\" + accent + \\", \\" + alpha(accent, 0.6) + \\")\\" , display: \\"flex\\", alignItems: \\"center\\", justifyContent: \\"center\\", fontSize: \\"13px\\", fontWeight: \\"800\\", color: \\"#fff\\" }}>{logo[0]}</div>\\n          <span style={{ fontSize: \\"15px\\", fontWeight: \\"800\\", color: \\"#fff\\" }}>{logo}</span>\\n        </div>\\n        {!isMobile && (\\n          <div style={{ display: \\"flex\\", gap: \\"2px\\" }}>\\n            {links.map(link => (\\n              <button key={link} onClick={() => { setActive(link); onLinkClick(link); }} style={{ background: active === link ? alpha(accent, 0.12) : \\"transparent\\", border: \\"none\\", padding: \\"7px 16px\\", borderRadius: \\"9px\\", fontSize: \\"14px\\", fontWeight: active === link ? \\"700\\" : \\"500\\", color: active === link ? accent : \\"rgba(255,255,255,0.5)\\", cursor: \\"pointer\\", fontFamily: \\"inherit\\" }}>{link}</button>\\n            ))}\\n          </div>\\n        )}\\n        <button onClick={onCtaClick} style={{ padding: \\"8px 18px\\", borderRadius: \\"10px\\", border: \\"none\\", background: \\"linear-gradient(135deg, \\" + accent + \\", \\" + alpha(accent, 0.75) + \\")\\" , color: \\"#fff\\", fontSize: \\"13px\\", fontWeight: \\"700\\", cursor: \\"pointer\\", fontFamily: \\"inherit\\" }}>{ctaText}</button>\\n      </div>\\n    </nav>\\n  );\\n};","props":["logo","links","ctaText","accent","bg","onCtaClick","onLinkClick"]}`,
-  },
-  {
-    role: "user",
-    content: prompt,
-  }
-    
-]  
+            },
+            {
+                role: "user",
+                content: prompt,
+            }
+        ]
 
+        const aiResponse = await askAI(messages)
+        let parsed
+        try {
 
- 
-  }
-   catch (error) {
-       console.error(error)
+            const clean = aiResponse
+                .replace(/```json/g, "")
+                .replace(/```/g, "")
+                .trim()
+                 
+                parse=json.parse(clean)
+
+        } catch (error) { 
+                     cosole.log("AI response :", aiResponse) 
+                     return res.status(500).json({
+                     message:"AI returned invalid json"
+                     })
+
+        }
+
+    }
+    catch (error) {
+        console.error(error)
         return res.status(500).json({ message: "Internal server error" })
-  }
+    }
 }
