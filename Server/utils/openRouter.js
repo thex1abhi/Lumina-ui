@@ -26,7 +26,7 @@ export const askAI = async (messages) => {
         return content
     } catch (error) {
         console.log("OpenRouter error:",error.response?.data || error.message);
-        throw new Error("Open router API error")
+        throw new Error("Open router API error") 
     }
 
 }
