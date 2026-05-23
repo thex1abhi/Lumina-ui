@@ -61,7 +61,28 @@ export const publishComponent = async (req, res) => {
                 message: "You can only publish your own component"
             })
         }
-    } catch (error) {
 
+        const libPath = path.join(process.cwd(), "../luminaui-lib")
+
+        const componentDir = path.join(
+            libPath,
+            "src/components",
+            component.name
+        )
+
+        const componentFile = path.join(
+            componentDir,
+            `${component.name}.jsx`
+        )
+ 
+        const indexFile=path.join(libPath,"src/index.js");
+        
+
+
+    } catch (error) {
+        console.log(error)
+        return res.status(400).json({
+            message: `Error in publishing component ${error.message} `
+        })
     }
 }
