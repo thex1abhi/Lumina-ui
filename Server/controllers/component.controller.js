@@ -35,11 +35,33 @@ export const saveComponent = async (req, res) => {
             code,
             props,
             owner: req.userId,
-        }) 
+        })
         return res.status(200).json(component)
     } catch (error) {
         return res.status(500).json({ message: `Failed to save component ${error}  ` })
-    } 
-} 
+    }
+}
 
 
+export const publishComponent = async (req, res) => {
+    try {
+        const user = await User.findById(req.userId)
+        if (!user || user.role !== "admin") {
+            return res.status(403).json({
+                message: "Only admin can publish "
+            })
+        }
+        const { componentId } = req.body
+        const component = await Component.findById(componentId)
+        if (!componentId) {
+            return res.status(404).json({ message: "Component not found" })
+        }
+        if (component.owner.toString() !== req.userId.toString()) {
+            return res.status(403).json({
+                message: "You can only publish your own component"
+            })
+        }
+    } catch (error) {
+
+    }
+}
