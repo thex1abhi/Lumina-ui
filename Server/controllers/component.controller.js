@@ -1,5 +1,7 @@
 import Component from "../models/component.model.js"
 import User from "../models/user.model.js"
+import fs from "fs"
+import { execSync } from "child_process"
 
 export const saveComponent = async (req, res) => {
     try {
@@ -74,10 +76,62 @@ export const publishComponent = async (req, res) => {
             componentDir,
             `${component.name}.jsx`
         )
- 
-        const indexFile=path.join(libPath,"src/index.js");
-        
 
+        const indexFile = path.join(libPath, "src/index.js");
+
+        //create component folder
+        if (!fs.existsSync(componentDir)) {
+            fs.mkdirSync(componentDir, { recursive: true })
+        }
+        //create component code 
+        fs.writeFileSync(componentFile, component.code);
+
+        let indexContent = fs.readFileSync(indexFile, "utf8")
+
+        const exportLine =
+            `export { ${component.name} } from "./components/${component.name}
+            /${component.name}.jsx";`;
+
+        //prevent duplicate export
+        if (!indexContent.includes(exportLine)) {
+            fs.appendFileSync(indexFile, `\n${exportLine}\n`)
+        }
+
+        //clean old build
+
+        console.log("Cleaning old build...")
+
+        const distPath = path.join(libPath, "dist")
+
+        if (!fs.existsSync(distPath)) {
+            fs.rmSync(distPath, { recursive: true, force: true })
+        }
+
+        //build library 
+
+        console.log("Building library")
+
+        execSync("npm run build", {
+            cwd: libPath,
+            stdio: "inherit"
+        })
+
+        //update version 
+        console.log("Updating Version....")
+
+        execSync("npm version patch --no-git-tag-version", {
+            cwd: libPath,
+            stdio: "inherit"
+        })
+
+        //publish to npm 
+
+        console.log("Publishing to npm...")
+        execSync("npm publish --access public", {
+            cwd: libPath,
+            stdio: "inherit"
+
+        })
 
     } catch (error) {
         console.log(error)
