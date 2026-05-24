@@ -133,6 +133,12 @@ export const publishComponent = async (req, res) => {
 
         })
 
+
+        component.visibility = "public"
+        component.npmPackage = "@yadavabhi/lumina-ui"
+
+        await component.save()
+
     } catch (error) {
         console.log(error)
         return res.status(400).json({
