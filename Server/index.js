@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser"
 import authRouter from "./routes/auth.route.js"
 import cors from "cors"
 import userRouter from "./routes/user.route.js"
+import componentRouter from "./routes/component.route.js"
 dotenv.config()
 
 const app = express()
@@ -22,6 +23,7 @@ app.get("/", (req, res) => {
 })
 app.use("/api/auth", authRouter)
 app.use("/api/user", userRouter)
+app.use("?api/component", componentRouter) 
 
 app.listen(PORT, () => {
     console.log(`Server started on port ${PORT}`)

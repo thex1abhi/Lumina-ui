@@ -139,6 +139,9 @@ export const publishComponent = async (req, res) => {
 
         await component.save()
 
+        return res.status(200).json({
+            message: "Componenet published successfully "
+        })
     } catch (error) {
         console.log(error)
         return res.status(400).json({
