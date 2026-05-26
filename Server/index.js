@@ -23,7 +23,7 @@ app.get("/", (req, res) => {
 })
 app.use("/api/auth", authRouter)
 app.use("/api/user", userRouter)
-app.use("?api/component", componentRouter) 
+app.use("/api/component", componentRouter) 
 
 app.listen(PORT, () => {
     console.log(`Server started on port ${PORT}`)
