@@ -1,7 +1,7 @@
 
 import React from "react";
-import { AnimatePresence, motion } from "motion/react" 
-import {FiCpu} from "react-icons/fi"
+import { AnimatePresence, motion } from "motion/react"
+import { FiCpu } from "react-icons/fi"
 function Generate() {
   return (
     <div
@@ -24,16 +24,28 @@ function Generate() {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-12 " >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-6  "  
-           style={{background: "rgba(99,102,241,0.15)", 
-          border:"1px solid rgba(99,102,241,0.3)"
-        }}
-          >   
-          <FiCpu size={14}  className="text-indigo-400"  />
-          <span className="text-xs font-semibold  -tracking-widest text-indigo-300 uppercase "></span>
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-6  "
+            style={{
+              background: "rgba(99,102,241,0.15)",
+              border: "1px solid rgba(99,102,241,0.3)"
+            }}
+          >
+            <FiCpu size={14} className="text-indigo-400" />
+            <span className="text-xs font-semibold  tracking-widest text-indigo-300 uppercase ">
+              AI component Studio
+            </span>
           </div>
-          <h2 className=""></h2>
-          <p className=""></p>
+          <h2 className="text-5xl font-bold leading-tight mb-3 "
+            style={{ fontFamily: " 'space Grotesk ' , sans-serif ", letterSpacing: "-0.03em" }}
+          >
+            <span className="text-white  "> Build with  </span>
+            <span className=""
+              style={{ background: "linear-gradient(135deg,#818cf8 0% ,  #06b6d4 100% )",  WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent" }}
+            > AI  </span>
+          </h2>
+          <p className="text-white/40 text-base max-w-md mx-auto  "> 
+          Describe your react component in plain English. Preview , save , and publish - all in one place 
+          </p>
         </motion.div>
       </div>
 
