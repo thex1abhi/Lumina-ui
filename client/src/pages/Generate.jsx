@@ -1,14 +1,16 @@
 
 import React from "react";
 import { AnimatePresence, motion } from "motion/react"
-import { FiCpu } from "react-icons/fi"
+import { FiAlertCircle, FiArrowRight, FiCpu, FiPlus, FiZap } from "react-icons/fi"
 import { useSelector } from "react-redux"
+import { useNavigate } from "react-router-dom";
+
 function Generate() {
 
   const { userData } = useSelector((state) => state.user)
-
-  const userRole = userData.userRole
-  const aiCredits = userData.aiCredits
+  const navigate = useNavigate();
+  const userRole = userData?.role
+  const aiCredits = userData?.aiCredits
   const lowCredits = userRole === "user" && aiCredits < 50
 
   return (
@@ -68,7 +70,36 @@ function Generate() {
                   background: lowCredits ? "rgba(239,68,68,0.1)" : " rgba(99,102,241,0.1) ",
                   border: `1px solid ${lowCredits ? " rgba(239,68,68,0.25)  " : " rgba(99,102, 241, 0.25) "} `
                 }}
-              ></div>
+              >
+                <FiZap size={13} style={{ color: lowCredits ? "#f87171" : "#818cf8" }} />
+                <span className="text-xs font-semibold  " style={{ color: lowCredits ? "#f87171" : "818cf8" }} > {aiCredits} AI Credits  </span>
+                <button className="flex items-center justify-center w-5 h-5 rounded-md transition-all cursor-pointer border-none "
+                  style={{ backgroundColor: lowCredits ? "rgba(239 68,68,0.2)" : "rgba(99,102,241,0.2)" }}
+                  onClick={() => navigate("/pricing")}
+                >
+                  <FiPlus size={11} style={{ color: lowCredits ? "#f87171" : "818cf8" }} />
+                </button>
+              </div>
+            </motion.div>
+          )
+        }
+
+        {
+          lowCredits && (
+            <motion.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="flex items-center justify-center gap-3 px-4 py-3 rounded-2xl mb-5 "
+              style={{ backgroundColor: "rbga(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)" }}
+            >
+              <FiAlertCircle size={16} className="text-red-400 shrink-0" />
+              <p className="text-sm text-red-300">You need atleast  <span className="font-bold text-red-400"> 50 credits </span> to generate a component </p>
+              <button
+                onClick={() => navigate("/pricing")}
+                className="ml-auto flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer border-none whitespace-nowrap "
+                style={{ background: " rgba(239,68,68,0.2) ", color:"#f87171" }}
+              > Buy Credits <FiArrowRight  size={15}/>
+              </button>
             </motion.div>
           )
         }
