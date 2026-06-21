@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { AnimatePresence, motion } from "motion/react"
 import { FiAlertCircle, FiArrowRight, FiCpu, FiPlus, FiZap } from "react-icons/fi"
 import { useSelector } from "react-redux"
@@ -11,7 +11,8 @@ function Generate() {
   const navigate = useNavigate();
   const userRole = userData?.role
   const aiCredits = userData?.aiCredits
-  const lowCredits = userRole === "user" && aiCredits < 50
+  const lowCredits = userRole === "user" && aiCredits <= 50
+  const [prompt, setPrompt] = useState("");
 
   return (
     <div
@@ -84,26 +85,68 @@ function Generate() {
           )
         }
 
-        {
-          lowCredits && (
-            <motion.div
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="flex items-center justify-center gap-3 px-4 py-3 rounded-2xl mb-5 "
-              style={{ backgroundColor: "rbga(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)" }}
-            >
-              <FiAlertCircle size={16} className="text-red-400 shrink-0" />
-              <p className="text-sm text-red-300">You need atleast  <span className="font-bold text-red-400"> 50 credits </span> to generate a component </p>
-              <button
-                onClick={() => navigate("/pricing")}
-                className="ml-auto flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer border-none whitespace-nowrap "
-                style={{ background: " rgba(239,68,68,0.2) ", color:"#f87171" }}
-              > Buy Credits <FiArrowRight  size={15}/>
-              </button>
-            </motion.div>
-          )
-        }
+        {lowCredits && (
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex items-center justify-center gap-3 px-4 py-3 rounded-2xl mb-5"
+            style={{
+              backgroundColor: "rgba(239,68,68,0.08)",
+              border: "1px solid rgba(239,68,68,0.2)",
+            }}
+          >
+            <FiAlertCircle size={16} className="text-red-400 shrink-0" />
 
+            <p className="text-sm text-red-300">
+              You need at least
+              <span className="font-bold text-red-400"> 50 credits </span>
+              to generate a component
+            </p>
+
+            <button
+              onClick={() => navigate("/pricing")}
+              className="ml-auto flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer border-none whitespace-nowrap"
+              style={{
+                background: "rgba(239,68,68,0.2)",
+                color: "#f87171",
+              }}
+            >
+              Buy Credits <FiArrowRight size={15} />
+            </button>
+          </motion.div>
+        )}
+
+
+        {/* prompt box */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="rounded-2xl p-1 mb-8">
+
+          <div
+            className="rounded-xl p-4 flex gap-2 items-start"
+            style={{
+              background: "linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01))",
+              border: "1px solid rgba(99,102,241,0.06)",
+            }}
+          >
+            <FiZap className="text-indigo-400 mt-2 shrink-0" />
+
+            <textarea
+              onChange={(e) => setPrompt(e.target.value)}
+              value={prompt}
+              disabled={lowCredits}
+              rows={3}
+              className="flex-1 bg-transparent text-white placeholder-white/40 resize-none rounded-lg  outline-none border border-transparent focus:border-indigo-500 transition-colors disabled:cursor-not-allowed "
+              placeholder={lowCredits ? "Not enough credits to generate" : " A glassmorphism pricing card with a toggle for monthly/annual billing..."}
+            />
+          </div>
+
+          <div className="flex items-center justify-between  px-4 pb-3 ">
+            <span className="text-xs text-white/20">   </span>
+          </div>
+        </motion.div>
 
       </div>
 
