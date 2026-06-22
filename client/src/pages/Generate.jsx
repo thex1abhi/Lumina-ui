@@ -1,9 +1,31 @@
 
 import React, { useState } from "react";
 import { AnimatePresence, motion } from "motion/react"
-import { FiAlertCircle, FiArrowRight, FiCpu, FiPlus, FiZap } from "react-icons/fi"
+import { FiAlertCircle, FiArrowRight, FiCheckCircle, FiCpu, FiLoader, FiPlus, FiZap } from "react-icons/fi"
 import { useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom";
+
+const Toast = ({ message, type, onclose }) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: -40 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -40 }}
+      className="fixed top-6 right-6 z-50 flex items-center gap-3 
+     px-5 py-3 rounded-2xl shadow-2xl"
+      style={{
+        background: type === "success" ? "#0d9f6e " : type === "error" ?
+          "#e02424" : "#1c1c2e",
+        color: "#fff",
+        minWidth: "220px",
+      }}
+    >
+      {type === "success" ? <FiCheckCircle size={18} /> : <FiAlertCircle size={18} />} 
+      <p className=""> { message} </p>
+
+    </motion.div>
+  )
+}
 
 function Generate() {
 
@@ -12,7 +34,17 @@ function Generate() {
   const userRole = userData?.role
   const aiCredits = userData?.aiCredits
   const lowCredits = userRole === "user" && aiCredits <= 50
-  const [prompt, setPrompt] = useState("");
+  const [prompt, setPrompt] = useState("")
+  const [generated, setGenerated] = useState(null);
+  const [generating, setGenerating] = useState(false);
+
+  const hanleGenerate = async () => {
+    try {
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   return (
     <div
@@ -144,11 +176,78 @@ function Generate() {
           </div>
 
           <div className="flex items-center justify-between  px-4 pb-3 ">
-            <span className="text-xs text-white/20">   </span>
+            <span className="text-xs text-white/20"> Crtl + Enter to generate  </span>
+            <motion.button
+              whileTap={{ scale: 0.97 }}
+              disabled={generating || lowCredits || !prompt.trim()}
+              className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold disabled:opacity-40  disabled:cursor-not-allowed transition-all "
+              style={{
+                background: generating ? "rgba(99,102,241,0.3)" :
+                  " linear-gradient(135deg, #6366f1 0% , #4f46e5 100% ) ",
+                boxShadow: generating ? "none" : " 0 0 24px rgba(99,102,241,0.4) ",
+              }}
+            >
+
+              {generating ? (
+                <motion.span animate={{ rotate: 360 }}
+                  transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+                  className="inline-block">
+                  <FiLoader size={15} />
+                </motion.span>
+              ) : (
+                <FiZap size={13} />
+              )
+              }
+
+              {generating ? "Generating..." : " Generate"}
+
+            </motion.button>
           </div>
         </motion.div>
 
       </div>
+
+      {
+        !generated && !generating && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+            className="text-center py-16 ">
+
+            <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 "
+              style={{ background: " rgba(99,102, 241,0.1) ", border: " 1px solid rgba(99,102,241,0.2) " }}
+            >
+
+              <FiCpu size={28} className="text-indigo-400" />
+            </div>
+            <p className="text-white/20  text-sm  "> Describe your component above and hit Generate
+            </p>
+          </motion.div>
+        )
+      }
+
+      {
+        generating && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-center py-16">
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+              style={{ borderTopColor: "#6366f1", borderRightColor: "#06b6d4" }}
+              className="w-12 h-12 rounded-full border-2 border-transparent mx-auto mb-4 "
+
+            />
+
+            <p className="text-white/30  text-sm "> AI is crafting your component...</p>
+
+          </motion.div>
+        )
+      }
+
+
 
     </div>
   );
