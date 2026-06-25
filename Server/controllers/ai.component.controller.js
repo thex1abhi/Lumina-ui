@@ -89,9 +89,9 @@ OUTPUT FORMAT:
                 .replace(/```json/g, "")
                 .replace(/```/g, "")
                 .trim()
-            parse = json.parse(clean)
+            parse = JSON.parse(clean)
         } catch (error) {
-            cosole.log("AI response :", aiResponse)
+            console.log("AI response :", aiResponse)
             return res.status(500).json({
                 message: "AI returned invalid json"
             })
