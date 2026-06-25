@@ -2,10 +2,14 @@
 import React, { useState } from "react";
 import { AnimatePresence, motion } from "motion/react"
 import { FiAlertCircle, FiArrowRight, FiCheckCircle, FiCpu, FiLoader, FiPlus, FiZap } from "react-icons/fi"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { ServerUrl } from "../App.jsx";
+import { setUserData } from "../redux/userSlice.js";
+import { TbX } from "react-icons/tb";
 
-const Toast = ({ message, type, onclose }) => {
+const Toast = ({ message, type, onClose }) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: -40 }}
@@ -20,9 +24,13 @@ const Toast = ({ message, type, onclose }) => {
         minWidth: "220px",
       }}
     >
-      {type === "success" ? <FiCheckCircle size={18} /> : <FiAlertCircle size={18} />} 
-      <p className=""> { message} </p>
-
+      {type === "success" ? <FiCheckCircle size={18} /> : <FiAlertCircle size={18} />}
+      <p className=""> {message} </p>
+      <button
+        onClick={onClose}
+        className="ml-auto text-white/60 hover:text-white text-xs ">
+        <TbX size={18} />
+      </button>
     </motion.div>
   )
 }
@@ -37,13 +45,42 @@ function Generate() {
   const [prompt, setPrompt] = useState("")
   const [generated, setGenerated] = useState(null);
   const [generating, setGenerating] = useState(false);
+  const [toast, setToast] = useState(null);
+  const dispatch = useDispatch();
 
-  const hanleGenerate = async () => {
+  const showToast = (message, type = "info") => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3500)
+  }
+
+  const handleGenerate = async () => {
+    if (!prompt.trim() || lowCredits) return
+    setGenerated(null);
+    setGenerating(true);
     try {
-
+      const { data } = await axios.post(ServerUrl + "/api/component/generate",
+        { prompt }, { withCredentials: true })
+      console.log(data.parsed)
+      setGenerated(data.parsed)
+      dispatch(setUserData({
+        ...userData, aiCredits: data.remainingCredits
+      }))
+      setGenerating(false)
+      showToast("AI component Generated", " success")
     } catch (error) {
+      console.log(error) 
       console.log(error)
+      showToast("Error in generating component", "error")
+      setGenerating(false) 
+
     }
+  }
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
+      handleGenerate()
+    }
+
   }
 
   return (
@@ -166,6 +203,7 @@ function Generate() {
             <FiZap className="text-indigo-400 mt-2 shrink-0" />
 
             <textarea
+              onKeyDown={handleKeyDown}
               onChange={(e) => setPrompt(e.target.value)}
               value={prompt}
               disabled={lowCredits}
@@ -178,6 +216,7 @@ function Generate() {
           <div className="flex items-center justify-between  px-4 pb-3 ">
             <span className="text-xs text-white/20"> Crtl + Enter to generate  </span>
             <motion.button
+              onClick={handleGenerate}
               whileTap={{ scale: 0.97 }}
               disabled={generating || lowCredits || !prompt.trim()}
               className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold disabled:opacity-40  disabled:cursor-not-allowed transition-all "
@@ -213,9 +252,9 @@ function Generate() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3 }}
-            className="text-center py-16 ">
+            className="text-center py-16 pt-2 ">
 
-            <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 "
+            <div className="w-16 h-16  rounded-2xl flex items-center justify-center mx-auto mb-4 "
               style={{ background: " rgba(99,102, 241,0.1) ", border: " 1px solid rgba(99,102,241,0.2) " }}
             >
 
@@ -247,6 +286,11 @@ function Generate() {
         )
       }
 
+      <AnimatePresence >
+        {toast && (
+          <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />
+        )}
+      </AnimatePresence>
 
 
     </div>
