@@ -89,7 +89,7 @@ OUTPUT FORMAT:
                 .replace(/```json/g, "")
                 .replace(/```/g, "")
                 .trim()
-            parse = JSON.parse(clean)
+            parsed = JSON.parse(clean)
         } catch (error) {
             console.log("AI response :", aiResponse)
             return res.status(500).json({

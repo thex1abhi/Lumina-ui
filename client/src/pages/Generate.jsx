@@ -68,7 +68,6 @@ function Generate() {
       setGenerating(false)
       showToast("AI component Generated", " success")
     } catch (error) {
-      console.log(error) 
       console.log(error)
       showToast("Error in generating component", "error")
       setGenerating(false) 
