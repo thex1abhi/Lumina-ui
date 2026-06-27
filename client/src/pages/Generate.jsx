@@ -1,13 +1,14 @@
 
 import React, { useState } from "react";
 import { AnimatePresence, motion } from "motion/react"
-import { FiAlertCircle, FiArrowRight, FiCheckCircle, FiCpu, FiLoader, FiPlus, FiZap } from "react-icons/fi"
+import { FiAlertCircle, FiArrowRight, FiCheckCircle, FiCpu, FiLayers, FiLoader, FiPlus, FiZap } from "react-icons/fi"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ServerUrl } from "../App.jsx";
 import { setUserData } from "../redux/userSlice.js";
 import { TbX } from "react-icons/tb";
+import { LiveComponentPreview } from "../components/LiveComponentPreview.jsx";
 
 const Toast = ({ message, type, onClose }) => {
   return (
@@ -70,16 +71,16 @@ function Generate() {
     } catch (error) {
       console.log(error)
       showToast("Error in generating component", "error")
-      setGenerating(false) 
+      setGenerating(false)
 
     }
   }
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
-      handleGenerate()
+      e.preventDefault();
+      handleGenerate();
     }
-
   }
 
   return (
@@ -193,57 +194,102 @@ function Generate() {
           className="rounded-2xl p-1 mb-8">
 
           <div
-            className="rounded-xl p-4 flex gap-2 items-start"
+            className="rounded-xl p-4 sm:p-5 flex flex-col gap-3"
             style={{
               background: "linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01))",
               border: "1px solid rgba(99,102,241,0.06)",
             }}
           >
-            <FiZap className="text-indigo-400 mt-2 shrink-0" />
+            <div className="flex gap-3 items-start">
+              <FiZap className="text-indigo-400 mt-2 shrink-0" />
 
-            <textarea
-              onKeyDown={handleKeyDown}
-              onChange={(e) => setPrompt(e.target.value)}
-              value={prompt}
-              disabled={lowCredits}
-              rows={3}
-              className="flex-1 bg-transparent text-white placeholder-white/40 resize-none rounded-lg  outline-none border border-transparent focus:border-indigo-500 transition-colors disabled:cursor-not-allowed "
-              placeholder={lowCredits ? "Not enough credits to generate" : " A glassmorphism pricing card with a toggle for monthly/annual billing..."}
-            />
-          </div>
+              <textarea
+                onKeyDown={handleKeyDown}
+                onChange={(e) => setPrompt(e.target.value)}
+                value={prompt}
+                disabled={lowCredits}
+                rows={1}
+                className="flex-1 bg-transparent text-white placeholder-white/40 resize-none rounded-lg px-2 py-2 outline-none border border-transparent focus:border-indigo-500 transition-colors disabled:cursor-not-allowed"
+                placeholder={lowCredits ? "Not enough credits to generate" : " A glassmorphism pricing card with a toggle for monthly/annual billing..."}
+              />
+            </div>
 
-          <div className="flex items-center justify-between  px-4 pb-3 ">
-            <span className="text-xs text-white/20"> Crtl + Enter to generate  </span>
-            <motion.button
-              onClick={handleGenerate}
-              whileTap={{ scale: 0.97 }}
-              disabled={generating || lowCredits || !prompt.trim()}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold disabled:opacity-40  disabled:cursor-not-allowed transition-all "
-              style={{
-                background: generating ? "rgba(99,102,241,0.3)" :
-                  " linear-gradient(135deg, #6366f1 0% , #4f46e5 100% ) ",
-                boxShadow: generating ? "none" : " 0 0 24px rgba(99,102,241,0.4) ",
-              }}
-            >
+            <div className="flex flex-wrap items-center justify-between gap-3 px-1 pt-1">
+              <span className="text-xs text-white/30">Ctrl + Enter to generate</span>
+              <motion.button
+                onClick={handleGenerate}
+                whileTap={{ scale: 0.97 }}
+                disabled={generating || lowCredits || !prompt.trim()}
+                className="ml-auto flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                style={{
+                  background: generating ? "rgba(99,102,241,0.3)" :
+                    " linear-gradient(135deg, #6366f1 0% , #4f46e5 100% ) ",
+                  boxShadow: generating ? "none" : " 0 0 24px rgba(99,102,241,0.4) ",
+                }}
+              >
+                {generating ? (
+                  <motion.span animate={{ rotate: 360 }}
+                    transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+                    className="inline-block">
+                    <FiLoader size={15} />
+                  </motion.span>
+                ) : (
+                  <FiZap size={13} />
+                )}
 
-              {generating ? (
-                <motion.span animate={{ rotate: 360 }}
-                  transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
-                  className="inline-block">
-                  <FiLoader size={15} />
-                </motion.span>
-              ) : (
-                <FiZap size={13} />
-              )
-              }
-
-              {generating ? "Generating..." : " Generate"}
-
-            </motion.button>
+                {generating ? "Generating..." : " Generate"}
+              </motion.button>
+            </div>
           </div>
         </motion.div>
 
+
       </div>
+      <AnimatePresence >
+        {
+          generated && (
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 30 }}
+              className="rounded-2xl overflow-hidden"
+              style={{
+                background: "rgba(255,255,255,0.03)",
+                border: "1px solid rgba(255,255,255,0.08)"
+              }}
+            >
+
+              <div className=" flex items-center justify-between px-5 py-4 border-b    "
+                style={{ borderColor: "rgba(255,255,255,0.06)" }}  >
+                <div className="flex items-center gap-3"></div>
+                {/* icon  */}
+                <div className="w-8 h-8 rounded-lg flex items-center justify-center"
+                  style={{ background: "rgba(99,102,241,0.2)" }} >
+                  <FiLayers size={14} className="text-indigo-400" />
+                </div>
+
+                <div >
+                  {/* component name */}
+                  <p className="text-sm font-semibold text-white">
+                    {generated.name}
+                  </p>
+
+                  <p className="text-xs text-white/30 ">
+                    {generated.props?.length > 0 ? `Props: ${generated.props.
+                      join(",")}` : "No props"}
+                  </p>
+
+                  <p className="">
+
+                  </p>
+                </div>
+              </div>
+
+
+            </motion.div>
+          )
+        }
+      </AnimatePresence>
 
       {
         !generated && !generating && (
