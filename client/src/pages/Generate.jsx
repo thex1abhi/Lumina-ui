@@ -1,7 +1,7 @@
 
 import React, { useState } from "react";
 import { AnimatePresence, motion } from "motion/react"
-import { FiAlertCircle, FiArrowRight, FiCheckCircle, FiCpu, FiLayers, FiLoader, FiPlus, FiZap } from "react-icons/fi"
+import { FiAlertCircle, FiArrowRight, FiCheckCircle, FiCode, FiCpu, FiEye, FiLayers, FiLoader, FiPlus, FiZap } from "react-icons/fi"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -48,6 +48,13 @@ function Generate() {
   const [generating, setGenerating] = useState(false);
   const [toast, setToast] = useState(null);
   const dispatch = useDispatch();
+  const [activeTab, setActiveTab] = useState("preview");
+  const [savedComponentId, setsavedComponentId] = useState(null);
+  const [saving, setSaving] = useState(false);
+  const [publishing, setPublishing] = useState(false);
+  const [published, setPublished] = useState(false);
+
+
 
   const showToast = (message, type = "info") => {
     setToast({ message, type });
@@ -261,34 +268,106 @@ function Generate() {
 
               <div className=" flex items-center justify-between px-5 py-4 border-b    "
                 style={{ borderColor: "rgba(255,255,255,0.06)" }}  >
-                <div className="flex items-center gap-3"></div>
-                {/* icon  */}
-                <div className="w-8 h-8 rounded-lg flex items-center justify-center"
-                  style={{ background: "rgba(99,102,241,0.2)" }} >
-                  <FiLayers size={14} className="text-indigo-400" />
+                <div className="flex items-center gap-3">
+                  {/* icon  */}
+                  <div className="w-8 h-8 rounded-lg flex items-center justify-center"
+                    style={{ background: "rgba(99,102,241,0.2)" }} >
+                    <FiLayers size={14} className="text-indigo-400" />
+                  </div>
+
+                  <div >
+                    {/* component name */}
+                    <p className="text-sm font-semibold text-white">
+                      {generated.name}
+                    </p>
+
+                    <p className="text-xs text-white/30 ">
+                      {generated.props?.length > 0 ? `Props: ${generated.props.
+                        join(",")}` : "No props"}
+                    </p>
+                  </div>
                 </div>
 
-                <div >
-                  {/* component name */}
-                  <p className="text-sm font-semibold text-white">
-                    {generated.name}
-                  </p>
 
-                  <p className="text-xs text-white/30 ">
-                    {generated.props?.length > 0 ? `Props: ${generated.props.
-                      join(",")}` : "No props"}
-                  </p>
-
-                  <p className="">
-
-                  </p>
+                <div className="flex gap-1 rounded-xl p-1 "
+                  style={{ background: "rgba(0,0,0,0.03)" }} >
+                  {
+                    ["preview", "code"].map((tab) => (
+                      <button key={tab}
+                        onClick={() => setActiveTab(tab)}
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all capitalize "
+                        style={{
+                          background: activeTab === tab ? "rgba(99,102,241,0.5)" : "transparent",
+                          color: activeTab === tab ? "#fff" : "rgba(255,255,255,0.4)",
+                        }}  >
+                        {
+                          tab === "preview" ? <FiEye size={12} /> : <FiCode size={12} />
+                        }
+                      </button>
+                    ))}
                 </div>
+
+
+              </div>
+
+              <div className="p-5">
+                <AnimatePresence mode="wait" >
+                  {
+                    activeTab === "preview" ? (
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        key="preview">
+                        {
+                          generated?.code && (
+                            <LiveComponentPreview code={generated.code} />
+                          )}
+
+                      </motion.div>
+
+                    ) : (
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        key="code"
+                        className="rounded-xl overflow-auto"
+                        style={{ background: "#0d1117", border: "1px solid rgba(255,255,255,0.06)", maxHeight: "340px" }}
+                      >
+                        <pre className="p-5 text-xs leading-relaxed text-green-300 font-mono whitespace-pre-wrap " >
+                          {generated.code}
+
+                        </pre>
+
+                      </motion.div>
+                    )}
+                </AnimatePresence>
+              </div>
+
+
+              <div className="flex items-center gap-3 px-5 pb-5 pt-1  flex-wrap " >
+                {userRole === "admin" && (
+                  <>
+                    <motion.button
+                      whileTap={{ scale: 0.97 }}
+                      className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium
+                    transition-all disabled:opacity-40 disabled:cursor-not-allowed  ">
+                      
+                    </motion.button>
+                  </>
+                )}
+
+                {userRole === "user" && (
+                  <>
+                  </>
+                )}
+
               </div>
 
 
             </motion.div>
-          )
-        }
+          )}
       </AnimatePresence>
 
       {
