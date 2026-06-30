@@ -1,7 +1,7 @@
 
 import React, { useState } from "react";
 import { AnimatePresence, motion } from "motion/react"
-import { FiAlertCircle, FiArrowRight, FiCheckCircle, FiCode, FiCpu, FiEye, FiLayers, FiLoader, FiPlus, FiZap } from "react-icons/fi"
+import { FiAlertCircle, FiArrowRight, FiCheckCircle, FiCode, FiCpu, FiEye, FiLayers, FiLoader, FiPlus, FiSave, FiZap } from "react-icons/fi"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -42,7 +42,7 @@ function Generate() {
   const navigate = useNavigate();
   const userRole = userData?.role
   const aiCredits = userData?.aiCredits
-  const lowCredits = userRole === "user" && aiCredits <= 50
+  const lowCredits = userRole === "user" && aiCredits < 50
   const [prompt, setPrompt] = useState("")
   const [generated, setGenerated] = useState(null);
   const [generating, setGenerating] = useState(false);
@@ -283,7 +283,7 @@ function Generate() {
 
                     <p className="text-xs text-white/30 ">
                       {generated.props?.length > 0 ? `Props: ${generated.props.
-                        join(",")}` : "No props"}
+                        join(" , ")}` : "No props"}
                     </p>
                   </div>
                 </div>
@@ -351,15 +351,31 @@ function Generate() {
                   <>
                     <motion.button
                       whileTap={{ scale: 0.97 }}
+                      disabled={saving || savedComponentId}
                       className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium
-                    transition-all disabled:opacity-40 disabled:cursor-not-allowed  ">
-                      
+                    transition-all disabled:opacity-40 disabled:cursor-not-allowed  "
+                      style={{
+                        background: savedComponentId ? "rgba(16,185,129,0.1)"
+                          : "rgba(255,255,255,0.06)",
+                        border: savedComponentId ? "1px solid rgba(16,185,129,0.3" :
+                          "1px solid rgba(255,255,255,0.1)",
+                        color: savedComponentId ? "#34d399" : "#fff"
+                      }}>
+                      {saving ? <motion.span  animate={{ rotate: 360 }}
+                       transition={{ repeat: Infinity, duration: 1, ease: "linear" }}>
+                        <FiLoader size={14} />
+                      </motion.span> : savedComponentId ?
+                        <FiCheckCircle size={14} /> :  <FiSave size={14} />           
+                      }
+                      {saving ? "Saving..." : savedComponentId ? "Saved" : "Save Component"}
+
                     </motion.button>
                   </>
                 )}
 
                 {userRole === "user" && (
-                  <>
+                  <>  
+
                   </>
                 )}
 
