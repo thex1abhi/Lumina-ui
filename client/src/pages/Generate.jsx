@@ -361,20 +361,35 @@ function Generate() {
                           "1px solid rgba(255,255,255,0.1)",
                         color: savedComponentId ? "#34d399" : "#fff"
                       }}>
-                      {saving ? <motion.span  animate={{ rotate: 360 }}
-                       transition={{ repeat: Infinity, duration: 1, ease: "linear" }}>
+                      {saving ? <motion.span animate={{ rotate: 360 }}
+                        transition={{ repeat: Infinity, duration: 1, ease: "linear" }}>
                         <FiLoader size={14} />
                       </motion.span> : savedComponentId ?
-                        <FiCheckCircle size={14} /> :  <FiSave size={14} />           
+                        <FiCheckCircle size={14} /> : <FiSave size={14} />
                       }
                       {saving ? "Saving..." : savedComponentId ? "Saved" : "Save Component"}
 
                     </motion.button>
+
+                    {savedComponentId && !published && (
+                      <motion.button
+                        whileTap={{ scale: 0.97 }}
+                        className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold  transition-all disabled:opacity-400 " 
+                        style={{
+                          background:publishing ?  "rgba(6,182,212,0.2)" :"linear-gradient(135deg, #06b6d4 0% #0891b2 100% )",
+                          boxShadow: publishing ? "none" :"0 0 20px rgba(6,182,212,0.3)",
+                          color:"#fff",
+                        }}
+                        > 
+
+                      </motion.button>
+                    )}
+
                   </>
                 )}
 
                 {userRole === "user" && (
-                  <>  
+                  <>
 
                   </>
                 )}
