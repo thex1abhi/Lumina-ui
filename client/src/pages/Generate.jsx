@@ -1,7 +1,7 @@
 
 import React, { useState } from "react";
 import { AnimatePresence, motion } from "motion/react"
-import { FiAlertCircle, FiArrowRight, FiCheckCircle, FiCode, FiCpu, FiEye, FiLayers, FiLoader, FiPlus, FiSave, FiUploadCloud, FiZap } from "react-icons/fi"
+import { FiAlertCircle, FiArrowLeft, FiArrowRight, FiCheckCircle, FiCode, FiCpu, FiEye, FiLayers, FiLoader, FiPackage, FiPlus, FiRefreshCw, FiSave, FiUploadCloud, FiZap } from "react-icons/fi"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -61,6 +61,8 @@ function Generate() {
     setTimeout(() => setToast(null), 3500)
   }
 
+
+
   const handleGenerate = async () => {
     if (!prompt.trim() || lowCredits) return
     setGenerated(null);
@@ -81,7 +83,10 @@ function Generate() {
       setGenerating(false)
 
     }
-  }
+  } 
+
+
+  //Save funtion and publish function 10:14 tak done hai
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
@@ -407,16 +412,31 @@ function Generate() {
                         className="flex items-center gap-2 ml-auto"
                       >
                         <motion.button
+                          onClick={() => navigate("/")}
+                          whileTap={{ scale: 0.97 }}
                           className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all"
                           style={{
                             background: "rgba(255,255,255,0.05)",
                             border: "1px solid rgba(255,255,255,0.1) ", color: "rgba(255,255,255,0.1)"
+                          }}  >   <FiArrowLeft size={14} /> HomePage
+                        </motion.button>
+
+                        <motion.button
+                          onClick={() => {
+                            setPrompt("");
+                            setGenerated(null);
+                            setsavedComponentId(null);
+                            setPublished(null);
+                            setActiveTab("preview")
                           }}
-
-                        > HomePage </motion.button>
-
-
-                        <motion.button>  Generate New</motion.button>
+                          whileTap={{ scale: 0.97 }}
+                          className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all"
+                          style={{
+                            background: "linear-gradient(135deg,#6366f1 0% #4f46e5 100% )",
+                            boxShadow: "0 0 20px rgba(99,102,241,0.3) ", color: "#fff"
+                          }}
+                        >   <FiRefreshCw size={14} />
+                          Generate New</motion.button>
                       </motion.div>
                     )}
                   </>
@@ -424,6 +444,75 @@ function Generate() {
 
                 {userRole === "user" && (
                   <>
+                    <motion.button
+                      whileTap={{ scale: 0.97 }}
+                      disabled={saving || savedComponentId}
+                      className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium
+                    transition-all disabled:opacity-40 disabled:cursor-not-allowed  "
+                      style={{
+                        background: savedComponentId ? "rgba(16,185,129,0.1)"
+                          : "rgba(255,255,255,0.06)",
+                        border: savedComponentId ? "1px solid rgba(16,185,129,0.3" :
+                          "1px solid rgba(255,255,255,0.1)",
+                        color: savedComponentId ? "#34d399" : "#fff"
+                      }}>
+                      {saving ? <motion.span animate={{ rotate: 360 }}
+                        transition={{ repeat: Infinity, duration: 1, ease: "linear" }}>
+                        <FiLoader size={14} />
+                      </motion.span> : savedComponentId ?
+                        <FiCheckCircle size={14} /> : <FiSave size={14} />
+                      }
+                      {saving ? "Saving..." : savedComponentId ? "Saved" : "Save Component"}
+
+                    </motion.button>
+
+
+                    {savedComponentId && (
+                      <motion.div
+                        initial={{ opacity: 0, x: -8 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        className="flex items-center gap-2 ml-auto"
+                      >
+                        <motion.button
+                          onClick={() => navigate("/")}
+                          whileTap={{ scale: 0.97 }}
+                          className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all"
+                          style={{
+                            background: "rgba(255,255,255,0.05)",
+                            border: "1px solid rgba(255,255,255,0.1) ", color: "rgba(255,255,255,0.1)"
+                          }}  >   <FiArrowLeft size={14} /> HomePage
+                        </motion.button>
+
+                        <motion.button
+                          onClick={() => {
+                            setPrompt("");
+                            setGenerated(null);
+                            setsavedComponentId(null);
+                            setPublished(null);
+                            setActiveTab("preview")
+                          }}
+                          whileTap={{ scale: 0.97 }}
+                          className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all"
+                          style={{
+                            background: "linear-gradient(135deg,#6366f1 0% #4f46e5 100% )",
+                            boxShadow: "0 0 20px rgba(99,102,241,0.3) ", color: "#fff"
+                          }}
+                        >   <FiRefreshCw size={14} /> Generate New
+                        </motion.button>
+
+                        <motion.button
+                          whileTap={{ scale: 0.97 }}
+                          className=" flex  items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all"
+                          style={{
+                            background: "rgba(99,103=2,241,0.15)",
+                            border: "1px solid rgba(99,102,241,0.3)",
+                            color: "#818cf8"
+                          }}  >
+                          <FiPackage size={14} /> My Components
+
+                        </motion.button>
+                      </motion.div>
+                    )}
 
                   </>
                 )}
