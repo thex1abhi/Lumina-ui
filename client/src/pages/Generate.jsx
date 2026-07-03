@@ -1,7 +1,7 @@
 
 import React, { useState } from "react";
 import { AnimatePresence, motion } from "motion/react"
-import { FiAlertCircle, FiArrowRight, FiCheckCircle, FiCode, FiCpu, FiEye, FiLayers, FiLoader, FiPlus, FiSave, FiZap } from "react-icons/fi"
+import { FiAlertCircle, FiArrowRight, FiCheckCircle, FiCode, FiCpu, FiEye, FiLayers, FiLoader, FiPlus, FiSave, FiUploadCloud, FiZap } from "react-icons/fi"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -373,18 +373,52 @@ function Generate() {
 
                     {savedComponentId && !published && (
                       <motion.button
+                        disabled={publishing}
                         whileTap={{ scale: 0.97 }}
-                        className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold  transition-all disabled:opacity-400 " 
+                        className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold  transition-all disabled:opacity-400 "
                         style={{
-                          background:publishing ?  "rgba(6,182,212,0.2)" :"linear-gradient(135deg, #06b6d4 0% #0891b2 100% )",
-                          boxShadow: publishing ? "none" :"0 0 20px rgba(6,182,212,0.3)",
-                          color:"#fff",
+                          background: publishing ? "rgba(6,182,212,0.2)" : "linear-gradient(135deg, #06b6d4 0% #0891b2 100% )",
+                          boxShadow: publishing ? "none" : "0 0 20px rgba(6,182,212,0.3)",
+                          color: "#fff",
                         }}
-                        > 
-
+                      >
+                        {publishing ? <motion.span animate={{ rotate: 360 }}
+                          transition={{ repeat: Infinity, duration: 1, ease: "linear" }} >
+                          <FiLoader size={14} />
+                        </motion.span> : <FiUploadCloud size={14} />}
+                        {publishing ? "Publishing..." : "Publish to npm"}
                       </motion.button>
                     )}
 
+                    {published && <motion.div initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      className="flex items-center gap-2 px-4 py-2.5 rounded-xl  text-sm font-semibold"
+                      style={{
+                        background: "rgba(16,185,129,0.1)",
+                        border: "1px solid rgba(16,185,129,0.3)",
+                        color: "#34d399"
+                      }} >
+                      <FiCheckCircle size={14} /> Published
+                    </motion.div>}
+                    {savedComponentId && (
+                      <motion.div
+                        initial={{ opacity: 0, x: -8 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        className="flex items-center gap-2 ml-auto"
+                      >
+                        <motion.button
+                          className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all"
+                          style={{
+                            background: "rgba(255,255,255,0.05)",
+                            border: "1px solid rgba(255,255,255,0.1) ", color: "rgba(255,255,255,0.1)"
+                          }}
+
+                        > HomePage </motion.button>
+
+
+                        <motion.button>  Generate New</motion.button>
+                      </motion.div>
+                    )}
                   </>
                 )}
 
