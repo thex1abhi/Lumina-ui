@@ -83,10 +83,27 @@ function Generate() {
       setGenerating(false)
 
     }
-  } 
+  }
 
 
-  //Save funtion and publish function 10:14 tak done hai
+  const handleSave = async () => {
+    if (!generated) return;
+    setSaving(true)
+    try {
+      const res = await axios.post(ServerUrl + "/api/component/save", {
+        name: generated.name, code: generated.code, props: generated.props
+      }, { withCredentials: true })
+      setsavedComponentId(res.data._id)
+      showToast("Component saved sucessfully!", "success")
+      setSaving(false)
+    } catch (error) {
+      console.log(error);
+      showToast("Component save Error", "error")
+      setSaving(false)
+    }
+  }
+
+
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
@@ -354,7 +371,8 @@ function Generate() {
               <div className="flex items-center gap-3 px-5 pb-5 pt-1  flex-wrap " >
                 {userRole === "admin" && (
                   <>
-                    <motion.button
+                    <motion.button 
+                    onClick={handleSave}
                       whileTap={{ scale: 0.97 }}
                       disabled={saving || savedComponentId}
                       className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium
@@ -444,7 +462,8 @@ function Generate() {
 
                 {userRole === "user" && (
                   <>
-                    <motion.button
+                    <motion.button 
+                    onClick={handleSave}
                       whileTap={{ scale: 0.97 }}
                       disabled={saving || savedComponentId}
                       className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium
