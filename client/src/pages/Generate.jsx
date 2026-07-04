@@ -98,11 +98,27 @@ function Generate() {
       setSaving(false)
     } catch (error) {
       console.log(error);
-      showToast("Component save Error", "error")
+      showToast("Component save failed", "error")
       setSaving(false)
     }
   }
 
+  const handlePublished = async () => {
+    if (!savedComponentId) return;
+    setPublishing(true)
+    try {
+      await axios.post(ServerUrl + "/api/component/publish", { componentId: savedComponentId },
+        { withCredentials: true })
+      setPublished(true)
+      showToast("Publish to npm successfull", "success") 
+      setPublishing(false)
+
+    } catch (error) {
+      console.log(error);
+      showToast("Published failed", "error")
+      setPublishing(false)
+    }
+  }
 
 
   const handleKeyDown = (e) => {
@@ -371,8 +387,8 @@ function Generate() {
               <div className="flex items-center gap-3 px-5 pb-5 pt-1  flex-wrap " >
                 {userRole === "admin" && (
                   <>
-                    <motion.button 
-                    onClick={handleSave}
+                    <motion.button
+                      onClick={handleSave}
                       whileTap={{ scale: 0.97 }}
                       disabled={saving || savedComponentId}
                       className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium
@@ -395,7 +411,8 @@ function Generate() {
                     </motion.button>
 
                     {savedComponentId && !published && (
-                      <motion.button
+                      <motion.button 
+                      onClick={handlePublished}
                         disabled={publishing}
                         whileTap={{ scale: 0.97 }}
                         className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold  transition-all disabled:opacity-400 "
@@ -462,8 +479,8 @@ function Generate() {
 
                 {userRole === "user" && (
                   <>
-                    <motion.button 
-                    onClick={handleSave}
+                    <motion.button
+                      onClick={handleSave}
                       whileTap={{ scale: 0.97 }}
                       disabled={saving || savedComponentId}
                       className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium
