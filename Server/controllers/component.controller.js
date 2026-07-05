@@ -1,13 +1,14 @@
 import Component from "../models/component.model.js"
 import User from "../models/user.model.js"
 import fs from "fs"
+import path from "path"
 import { execSync } from "child_process"
 
 export const saveComponent = async (req, res) => {
     try {
         const { name, code, props } = req.body
 
-        const user = await User.js.findById(req.userId)
+        const user = await User.findById(req.userId)
         if (!user) {
             return res.status(404).json({ message: "User not found" })
         }
@@ -55,7 +56,7 @@ export const publishComponent = async (req, res) => {
         }
         const { componentId } = req.body
         const component = await Component.findById(componentId)
-        if (!componentId) {
+        if (!component) {
             return res.status(404).json({ message: "Component not found" })
         }
         if (component.owner.toString() !== req.userId.toString()) {
@@ -88,9 +89,7 @@ export const publishComponent = async (req, res) => {
 
         let indexContent = fs.readFileSync(indexFile, "utf8")
 
-        const exportLine =
-            `export { ${component.name} } from "./components/${component.name}
-            /${component.name}.jsx";`;
+        const exportLine = `export { ${component.name} } from "./components/${component.name}/${component.name}.jsx";`;
 
         //prevent duplicate export
         if (!indexContent.includes(exportLine)) {
@@ -102,10 +101,7 @@ export const publishComponent = async (req, res) => {
         console.log("Cleaning old build...")
 
         const distPath = path.join(libPath, "dist")
-
-        if (!fs.existsSync(distPath)) {
-            fs.rmSync(distPath, { recursive: true, force: true })
-        }
+        fs.rmSync(distPath, { recursive: true, force: true })
 
         //build library 
 

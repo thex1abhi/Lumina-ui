@@ -1,153 +1,74 @@
- 
- import React, { useState } from "react";
+import React from "react";
 
- export const Profilecard = ({
-  name        = "Jane Doe",
-  role        = "Product Designer",
-  bio         = "Crafting delightful user experiences, one pixel at a time.",
-  avatar      = "",               // URL — falls back to initials
-  stats       = [                   // array of { label, value }
-    { label: "Posts",    value: "128" },
-    { label: "Followers", value: "4.2k" },
-    { label: "Following", value: "318" },
+export const ProfileCard = ({
+  name = "Alex Johnson",
+  role = "Senior Designer",
+  avatar = "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=300&q=80",
+  bio = "Creating beautiful interfaces that users love. Passionate about design systems and accessibility.",
+  stats = [
+    { label: "Projects", value: 42 },
+    { label: "Clients", value: 28 },
+    { label: "Years", value: 7 }
   ],
-  accentColor = "#534AB7",
-  width       = "300px",
-  onFollow,
+  accent = "#6366f1",
+  bg = "#0f172a",
+  onContactClick = () => {}
 }) => {
-  const [following, setFollowing]   = useState(false);
-  const [btnHovered, setBtnHovered] = useState(false);
-  const [cardHovered, setCardHovered] = useState(false);
-
-  const initials = name
-    .split(" ")
-    .map((n) => n[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
-
-  const handleFollow = () => {
-    setFollowing((f) => !f);
-    onFollow?.(!following);
+  const alpha = (hex, op) => {
+    const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+    return "rgba(" + r + "," + g + "," + b + "," + op + ")";
   };
-
-  const cardStyle = {
-    width,
-    borderRadius: "16px",
-    background: "var(--color-background-primary)",
-    border: "0.5px solid var(--color-border-tertiary)",
-    boxShadow: cardHovered
-      ? "0 8px 24px rgba(0,0,0,0.10)"
-      : "0 2px 8px rgba(0,0,0,0.06)",
-    overflow: "hidden",
-    fontFamily: "inherit",
-    transition: "box-shadow 0.2s, transform 0.2s",
-    transform: cardHovered ? "translateY(-2px)" : "translateY(0)",
-  };
-
-  const bannerStyle = {
-    height: "72px",
-    background: accentColor,
-    opacity: 0.12,
-    position: "absolute",
-    inset: "0 0 auto 0",
-  };
-
-  const avatarStyle = {
-    width: "72px",
-    height: "72px",
-    borderRadius: "50%",
-    border: `3px solid var(--color-background-primary)`,
-    background: avatar ? "transparent" : accentColor + "22",
-    color: accentColor,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    fontSize: "22px",
-    fontWeight: 500,
-    overflow: "hidden",
-    flexShrink: 0,
-  };
-
-  const btnStyle = {
-    padding: "7px 22px",
-    borderRadius: "999px",
-    border: `1.5px solid ${accentColor}`,
-    background: following
-      ? accentColor
-      : btnHovered ? accentColor + "18" : "transparent",
-    color: following ? "#fff" : accentColor,
-    fontSize: "13px",
-    fontWeight: 500,
-    cursor: "pointer",
-    transition: "background 0.18s, color 0.18s",
-    outline: "none",
-    fontFamily: "inherit",
-  };
-
-  const statStyle = {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    gap: "2px",
-    flex: 1,
-  };
-
   return (
-    <div
-      style={cardStyle}
-      onMouseEnter={() => setCardHovered(true)}
-      onMouseLeave={() => setCardHovered(false)}
-    >
-      <div style={{ position: "relative", padding: "0 1.25rem 1.25rem" }}>
-        <div style={bannerStyle} />
-
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", paddingTop: "36px", position: "relative" }}>
-          <div style={avatarStyle}>
-            {avatar
-              ? <img src={avatar} alt={name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-              : initials}
-          </div>
-
-          <button
-            style={btnStyle}
-            onClick={handleFollow}
-            onMouseEnter={() => setBtnHovered(true)}
-            onMouseLeave={() => setBtnHovered(false)}
-          >
-            {following ? "Following" : "Follow"}
-          </button>
+    <div style={{
+      background: bg,
+      borderRadius: "16px",
+      padding: "24px",
+      width: "320px",
+      border: "1px solid rgba(255,255,255,0.08)",
+      fontFamily: "system-ui,sans-serif",
+      boxShadow: "0 10px 30px rgba(0,0,0,0.3)"
+    }}>
+      <div style={{ display: "flex", alignItems: "center", gap: "16px", marginBottom: "20px" }}>
+        <div style={{
+          width: "80px",
+          height: "80px",
+          borderRadius: "50%",
+          overflow: "hidden",
+          border: "3px solid " + alpha(accent, 0.3)
+        }}>
+          <img src={avatar} alt={name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
         </div>
-
-        <div style={{ marginTop: "12px" }}>
-          <h3 style={{ margin: "0 0 2px", fontSize: "16px", fontWeight: 500, color: "var(--color-text-primary)" }}>
-            {name}
-          </h3>
-          <p style={{ margin: "0 0 10px", fontSize: "13px", color: accentColor, fontWeight: 500 }}>
-            {role}
-          </p>
-          <p style={{ margin: 0, fontSize: "13px", lineHeight: "1.6", color: "var(--color-text-secondary)" }}>
-            {bio}
-          </p>
+        <div>
+          <h3 style={{ fontSize: "18px", fontWeight: "700", color: "#fff", margin: "0 0 4px" }}>{name}</h3>
+          <p style={{ fontSize: "13px", color: accent, margin: "0", fontWeight: "600" }}>{role}</p>
         </div>
       </div>
-
-      <div style={{
-        display: "flex",
-        borderTop: "0.5px solid var(--color-border-tertiary)",
-        padding: "14px 1.25rem",
-      }}>
-        {stats.map((s, i) => (
-          <div key={i} style={{
-            ...statStyle,
-            borderLeft: i > 0 ? "0.5px solid var(--color-border-tertiary)" : "none",
-          }}>
-            <span style={{ fontSize: "15px", fontWeight: 500, color: "var(--color-text-primary)" }}>{s.value}</span>
-            <span style={{ fontSize: "11px", color: "var(--color-text-secondary)" }}>{s.label}</span>
+      <p style={{ fontSize: "14px", color: "rgba(255,255,255,0.6)", lineHeight: 1.6, margin: "0 0 20px" }}>{bio}</p>
+      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "24px" }}>
+        {stats.map((stat, i) => (
+          <div key={i} style={{ textAlign: "center" }}>
+            <div style={{ fontSize: "20px", fontWeight: "800", color: "#fff" }}>{stat.value}</div>
+            <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.5px" }}>{stat.label}</div>
           </div>
         ))}
       </div>
+      <button
+        onClick={onContactClick}
+        style={{
+          width: "100%",
+          padding: "12px",
+          borderRadius: "10px",
+          border: "none",
+          background: "linear-gradient(135deg, " + accent + ", " + alpha(accent, 0.7) + ")",
+          color: "#fff",
+          fontSize: "14px",
+          fontWeight: "700",
+          cursor: "pointer",
+          fontFamily: "inherit"
+        }}
+      >
+        Contact Me
+      </button>
     </div>
   );
 };
-

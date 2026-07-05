@@ -76,7 +76,7 @@ function Generate() {
         ...userData, aiCredits: data.remainingCredits
       }))
       setGenerating(false)
-      showToast("AI component Generated", " success")
+      showToast("AI component Generated", "success")
     } catch (error) {
       console.log(error)
       showToast("Error in generating component", "error")
@@ -187,12 +187,12 @@ function Generate() {
                 }}
               >
                 <FiZap size={13} style={{ color: lowCredits ? "#f87171" : "#818cf8" }} />
-                <span className="text-xs font-semibold  " style={{ color: lowCredits ? "#f87171" : "818cf8" }} > {aiCredits} AI Credits  </span>
+                <span className="text-xs font-semibold  " style={{ color: lowCredits ? "#f87171" : "#818cf8" }} > {aiCredits} AI Credits  </span>
                 <button className="flex items-center justify-center w-5 h-5 rounded-md transition-all cursor-pointer border-none "
-                  style={{ backgroundColor: lowCredits ? "rgba(239 68,68,0.2)" : "rgba(99,102,241,0.2)" }}
+                  style={{ backgroundColor: lowCredits ? "rgba(239,68,68,0.2)" : "rgba(99,102,241,0.2)" }}
                   onClick={() => navigate("/pricing")}
                 >
-                  <FiPlus size={11} style={{ color: lowCredits ? "#f87171" : "818cf8" }} />
+                  <FiPlus size={11} style={{ color: lowCredits ? "#f87171" : "#818cf8" }} />
                 </button>
               </div>
             </motion.div>
@@ -267,9 +267,9 @@ function Generate() {
                 disabled={generating || lowCredits || !prompt.trim()}
                 className="ml-auto flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold disabled:opacity-40 disabled:cursor-not-allowed transition-all"
                 style={{
-                  background: generating ? "rgba(99,102,241,0.3)" :
-                    " linear-gradient(135deg, #6366f1 0% , #4f46e5 100% ) ",
-                  boxShadow: generating ? "none" : " 0 0 24px rgba(99,102,241,0.4) ",
+                  background: generating ? "rgba(99,102,241,0.3)" : "linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)",
+                  boxShadow: generating ? "none" : "0 0 24px rgba(99,102,241,0.4)",
+                  color: "#fff",
                 }}
               >
                 {generating ? (
@@ -391,13 +391,10 @@ function Generate() {
                       onClick={handleSave}
                       whileTap={{ scale: 0.97 }}
                       disabled={saving || savedComponentId}
-                      className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium
-                    transition-all disabled:opacity-40 disabled:cursor-not-allowed  "
+                      className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all disabled:opacity-40 disabled:cursor-not-allowed"
                       style={{
-                        background: savedComponentId ? "rgba(16,185,129,0.1)"
-                          : "rgba(255,255,255,0.06)",
-                        border: savedComponentId ? "1px solid rgba(16,185,129,0.3" :
-                          "1px solid rgba(255,255,255,0.1)",
+                        background: savedComponentId ? "rgba(16,185,129,0.1)" : "rgba(255,255,255,0.06)",
+                        border: savedComponentId ? "1px solid rgba(16,185,129,0.3)" : "1px solid rgba(255,255,255,0.1)",
                         color: savedComponentId ? "#34d399" : "#fff"
                       }}>
                       {saving ? <motion.span animate={{ rotate: 360 }}
@@ -415,9 +412,9 @@ function Generate() {
                       onClick={handlePublished}
                         disabled={publishing}
                         whileTap={{ scale: 0.97 }}
-                        className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold  transition-all disabled:opacity-400 "
+                        className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all disabled:opacity-40"
                         style={{
-                          background: publishing ? "rgba(6,182,212,0.2)" : "linear-gradient(135deg, #06b6d4 0% #0891b2 100% )",
+                          background: publishing ? "rgba(6,182,212,0.2)" : "linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)",
                           boxShadow: publishing ? "none" : "0 0 20px rgba(6,182,212,0.3)",
                           color: "#fff",
                         }}
@@ -452,8 +449,9 @@ function Generate() {
                           className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all"
                           style={{
                             background: "rgba(255,255,255,0.05)",
-                            border: "1px solid rgba(255,255,255,0.1) ", color: "rgba(255,255,255,0.1)"
-                          }}  >   <FiArrowLeft size={14} /> HomePage
+                            border: "1px solid rgba(255,255,255,0.1)",
+                            color: "rgba(255,255,255,0.85)"
+                          }}  >   <FiArrowLeft size={14} /> Home
                         </motion.button>
 
                         <motion.button
@@ -461,14 +459,15 @@ function Generate() {
                             setPrompt("");
                             setGenerated(null);
                             setsavedComponentId(null);
-                            setPublished(null);
+                            setPublished(false);
                             setActiveTab("preview")
                           }}
                           whileTap={{ scale: 0.97 }}
                           className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all"
                           style={{
-                            background: "linear-gradient(135deg,#6366f1 0% #4f46e5 100% )",
-                            boxShadow: "0 0 20px rgba(99,102,241,0.3) ", color: "#fff"
+                            background: "linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)",
+                            boxShadow: "0 0 20px rgba(99,102,241,0.3)",
+                            color: "#fff"
                           }}
                         >   <FiRefreshCw size={14} />
                           Generate New</motion.button>
@@ -483,13 +482,10 @@ function Generate() {
                       onClick={handleSave}
                       whileTap={{ scale: 0.97 }}
                       disabled={saving || savedComponentId}
-                      className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium
-                    transition-all disabled:opacity-40 disabled:cursor-not-allowed  "
+                      className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all disabled:opacity-40 disabled:cursor-not-allowed"
                       style={{
-                        background: savedComponentId ? "rgba(16,185,129,0.1)"
-                          : "rgba(255,255,255,0.06)",
-                        border: savedComponentId ? "1px solid rgba(16,185,129,0.3" :
-                          "1px solid rgba(255,255,255,0.1)",
+                        background: savedComponentId ? "rgba(16,185,129,0.1)" : "rgba(255,255,255,0.06)",
+                        border: savedComponentId ? "1px solid rgba(16,185,129,0.3)" : "1px solid rgba(255,255,255,0.1)",
                         color: savedComponentId ? "#34d399" : "#fff"
                       }}>
                       {saving ? <motion.span animate={{ rotate: 360 }}
@@ -515,7 +511,8 @@ function Generate() {
                           className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all"
                           style={{
                             background: "rgba(255,255,255,0.05)",
-                            border: "1px solid rgba(255,255,255,0.1) ", color: "rgba(255,255,255,0.1)"
+                            border: "1px solid rgba(255,255,255,0.1)",
+                            color: "rgba(255,255,255,0.85)"
                           }}  >   <FiArrowLeft size={14} /> HomePage
                         </motion.button>
 
@@ -524,14 +521,15 @@ function Generate() {
                             setPrompt("");
                             setGenerated(null);
                             setsavedComponentId(null);
-                            setPublished(null);
+                            setPublished(false);
                             setActiveTab("preview")
                           }}
                           whileTap={{ scale: 0.97 }}
                           className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all"
                           style={{
-                            background: "linear-gradient(135deg,#6366f1 0% #4f46e5 100% )",
-                            boxShadow: "0 0 20px rgba(99,102,241,0.3) ", color: "#fff"
+                            background: "linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)",
+                            boxShadow: "0 0 20px rgba(99,102,241,0.3)",
+                            color: "#fff"
                           }}
                         >   <FiRefreshCw size={14} /> Generate New
                         </motion.button>
@@ -540,7 +538,7 @@ function Generate() {
                           whileTap={{ scale: 0.97 }}
                           className=" flex  items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all"
                           style={{
-                            background: "rgba(99,103=2,241,0.15)",
+                            background: "rgba(99,102,241,0.15)",
                             border: "1px solid rgba(99,102,241,0.3)",
                             color: "#818cf8"
                           }}  >
