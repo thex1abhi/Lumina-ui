@@ -145,3 +145,23 @@ export const publishComponent = async (req, res) => {
         })
     }
 }
+
+
+export const getAllComponents = async (req, res) => {
+    try {
+        const components = await Component.find().populate("owner", "name, email").sort({ createdAt: -1 })
+        if (!components) {
+            return res.status(404).json({
+                message: "Components not found "
+            })
+        } 
+        return res.status(200).json(components)
+        
+    } catch (error) {
+        console.log(error)
+        return res.status(400).json({
+            message: ` error fetching components ${error.message} `
+        })
+    }
+
+}

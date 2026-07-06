@@ -128,6 +128,7 @@ function Home() {
             </motion.div>
             <div className="hidden md:flex items-center gap-6 lg:gap-8 text-sm text-white/50 ">
                 <motion.button
+                    onClick={() => navigate("/components")}
                     whileHover={{ color: "#3be8ff", y: -2 }}
                     transition={{ duration: 0.2 }}
                     className="transition-all duration-200  px-3 py-2.5 border border-white/15 rounded-xl text-sm text-white/70  hover:text-white hover:border-white/25 cursor-pointer bg-transparent w-full ">Components</motion.button>
@@ -161,7 +162,7 @@ function Home() {
                                     </div>
                                     <div className="p-2">
                                         <button
-                                            onClick={() => setProfileOpen(false)}
+                                            onClick={() => { navigate("/my-components"), setProfileOpen(false) }}
                                             className="w-full flex items-center gap-3 px-3 py-1 rounded-lg text-[#3be8ff]/70 hover:text-[#3be8ff] transition-all duration-200" >
                                             <TbComponents size={16} className="text-[#3be8ff]/70" />
                                             <span className="text-sm font-medium">My Components</span>
@@ -205,12 +206,14 @@ function Home() {
         <AnimatePresence >
             {menuOpen && (
                 <motion.div
+
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ duration: 0.25 }}
                     className="md:hidden sticky    z-30 bg-[#030b0d]/95 backdrop-blur-md border-b border-white/5 px-4 py-4 flex flex-col  items-center gap-3"  >
-                    <button className="w-full px-3 py-2 rounded-lg bg-[#0b1e24]/80 text-white/80 hover:text-white transition-colors">Components</button>
+                    <button onClick={() => navigate("/components")}
+                        className="w-full px-3 py-2 rounded-lg bg-[#0b1e24]/80 text-white/80 hover:text-white transition-colors">Components</button>
                     {userData ? (
                         <>
                             <div className="text-white flex items-center gap-3">
@@ -220,7 +223,7 @@ function Home() {
                                 <span className="text-white/80" > {userData.name} </span>
                             </div>
                             <button
-                                onClick={() => setMenuOpen(false)}
+                                onClick={() => { navigate("/my-components"), setMenuOpen(false) }}
                                 className="w-full flex justify-center gap-3 px-3 py-1 rounded-lg text-[#3be8ff]/70 hover:text-[#3be8ff] transition-all duration-200 cursor-pointer" >
                                 <TbComponents size={16} className="text-[#3be8ff]/70" />
                                 <span className="text-sm font-medium">My Components</span>
@@ -239,7 +242,7 @@ function Home() {
                                 whileHover={{ scale: 1.03, }}
                                 whileTap={{ scale: 0.95 }}
                                 onClick={() => setShowAuth(true)}
-                                className="px-2 whitespace-nowrap py-2 rounded-lg bg-[#3be8ff] text-[#051c20] text-sm font-semibold hover:shadow-[0_8px_24px_rgba(59,232,255,0.3)] transition-all duration-300 cursor-pointer">
+                                className=" w-full px-2 whitespace-nowrap py-2 rounded-lg bg-[#3be8ff] text-[#051c20] text-sm font-semibold hover:shadow-[0_8px_24px_rgba(59,232,255,0.3)] transition-all duration-300 cursor-pointer">
                                 Generate AI component
                             </motion.button>
 
@@ -305,6 +308,7 @@ function Home() {
                 transition={{ delay: 0.27, duration: 0.6 }}
                 className="flex flex-col sm:flex-row justify-center gap-3 px-4 sm:px-0">
                 <motion.button
+                    onClick={() => navigate("/components")}
                     whilehover={{ y: -2 }}
                     whileTap={{ scale: 0.97 }}
                     className=" flex items-center justify-center gap-2 px-6 sm:px-7 py-3.5 bg-white text-[#030b0d] rounded-xl font-semibold text-sm cursor-pointer border-none shadow-[0_4px_24px_rgba(255,255,255,0.1)] hover:shadow-[0_6px_32px_rgba(255,255,255,0.18)] transition-shadow w-full sm:w-auto  ">
@@ -485,6 +489,7 @@ function Home() {
                                     <HiSparkles size={15} />   Generate AI component
                                 </motion.button>
                                 <motion.button
+                                onClick={()=>navigate("/my-components")}
                                     whilehover={{ y: -2 }}
                                     whileTap={{ scale: 0.98 }}
                                     className="flex items-center justify-center gap-2  px-7 py-3.5  
@@ -508,6 +513,7 @@ function Home() {
                                     <HiSparkles size={15} />   Get Started Free
                                 </motion.button>
                                 <motion.button
+                                    onClick={() => navigate("/components")} 
                                     whilehover={{ y: -2 }}
                                     whileTap={{ scale: 0.98 }}
                                     className="flex items-center justify-center gap-2  px-7 py-3.5  
@@ -526,7 +532,7 @@ function Home() {
         </section>
 
         {/* footer  */}
-       <Footer />
+        <Footer />
 
 
     </div>;
