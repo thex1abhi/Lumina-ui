@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Auth from "../components/Auth.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import { SiValorant } from "react-icons/si";
@@ -79,6 +79,17 @@ function Home() {
     const [menuOpen, setMenuOpen] = useState(false);
 
     const { userData } = useSelector((state) => state.user)
+
+
+    useEffect(() => {
+        if (userData?.role === "admin") {
+            navigate("/admin")
+        }
+
+    }, [userData]);
+
+
+
     const getLetters = (name) => {
         if (!name) return "U"
         return name.split(" ").map(n => n[0]).join(" ").toUpperCase().slice(0, 2)
@@ -489,7 +500,7 @@ function Home() {
                                     <HiSparkles size={15} />   Generate AI component
                                 </motion.button>
                                 <motion.button
-                                onClick={()=>navigate("/my-components")}
+                                    onClick={() => navigate("/my-components")}
                                     whilehover={{ y: -2 }}
                                     whileTap={{ scale: 0.98 }}
                                     className="flex items-center justify-center gap-2  px-7 py-3.5  
@@ -512,8 +523,8 @@ function Home() {
                                     className="flex items-center justify-center gap-2 bg-[#3be8ff] text-[#030b0d] px-7 py-3.5 rounded-xl font-semibold text-sm cursor-pointer  border-none shadow-[0_0_30px_rgba(59,232,255,0.3)] hover:shadow-[0_0_40px_rgba(59,232,255,0.45)]  transition-shadow   ">
                                     <HiSparkles size={15} />   Get Started Free
                                 </motion.button>
-                                <motion.button
-                                    onClick={() => navigate("/components")} 
+                                <motion.button  
+                                onClick={() => navigate("/components")}
                                     whilehover={{ y: -2 }}
                                     whileTap={{ scale: 0.98 }}
                                     className="flex items-center justify-center gap-2  px-7 py-3.5  
