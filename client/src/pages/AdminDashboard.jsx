@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { SiValorant } from "react-icons/si";
-import { TbChevronLeft, TbLayoutDashboard, TbLogout, TbMenu2, TbPackage, TbPlus } from "react-icons/tb";
+import { TbChevronLeft, TbCode, TbLayoutDashboard, TbLogout, TbMenu2, TbPackage, TbPlus, TbUsers } from "react-icons/tb";
 import { ServerUrl } from "../App";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setUserData } from "../redux/userSlice";
 import { AnimatePresence, motion } from "motion/react";
+
+
 
 function AdminDashboard() {
 
@@ -15,11 +17,18 @@ function AdminDashboard() {
   const [activeView, setactiveView] = useState("dashboard");
   const [sideBarOpen, SetsideBarOpen] = useState(false);
   const { userData, allUsers, allComponents } = useSelector((s) => s.user)
+
+  const publicComponents = allComponents?.filter((c) => c.visiblity === "public") || []
   const navItems = [
     { id: "dashboard", label: "Dashboard", Icon: TbLayoutDashboard },
     { id: "add", label: "Add Components", Icon: TbPackage }
-
   ]
+
+  const stats = [
+    { label: "Total Users", value: allUsers?.length || 0, icon: TbUsers, color: "#3be8f" },
+    { label: "Components Made", value: publicComponents?.length || 0, icon: TbCode, color: "#a78bfa" },
+  ]
+
 
   const handleLogout = async () => {
     try {
@@ -31,7 +40,6 @@ function AdminDashboard() {
     }
 
   }
-
 
   const SidebarContent = () => (
     <>
@@ -67,7 +75,7 @@ function AdminDashboard() {
         })}
       </nav>
 
-      <div className=" p-3 border-t border-white/[0.05] ">
+      <div className=" p-3 border-t border-white/5 ">
         <button
           onClick={handleLogout}
           className="w-full flex items-center gap-3 px-3 py-1 rounded-lg text-red-400 hover:text-red-400 transition-colors cursor-pointer duration-200" >
@@ -78,6 +86,7 @@ function AdminDashboard() {
 
     </>
   )
+
 
   return (
     <>
@@ -107,7 +116,7 @@ function AdminDashboard() {
                   animate={{ x: 0 }}
                   exit={{ x: "-100%" }}
                   transition={{ type: "spring", damping: 28, stiffness: 300 }}
-                  className="fixed top-0 left-0 z-40 flex flex-col w-64 min-h-screen  bg-[#040e11] border-r border-white/[0.06] md:hidden  ">
+                  className="fixed top-0 left-0 z-40 flex flex-col w-64 min-h-screen  bg-[#040e11] border-r border-white/6 md:hidden  ">
                   <SidebarContent />
                 </motion.aside>
 
@@ -118,13 +127,13 @@ function AdminDashboard() {
 
         <main className="flex-1 md:ml-60 min-h-screen overflow-y-auto ">
           <div className="sticky top-0 z-10 pz-4 sm:px-6 lg:px-8 py-3.5 sm:py-4 bg-[#030b0d]/90
-           backdrop-blur-md border-b border-white/[0.05] flex items-center justify-between gap-2   ">
+           backdrop-blur-md border-b border-white/5 flex items-center justify-between gap-2   ">
 
             <div className="flex items-center gap-3 min-w-0">
               <button
                 onClick={() => SetsideBarOpen(true)}
-                className="md:hidden  bg-transparent border-none  cursor-pointer  p-1.5 rounded-lg text-white/50 hover:text-white/70 hover:bg-white/[0.05]  transition-all
-             flex-shrink-0   ">
+                className="md:hidden  bg-transparent border-none  cursor-pointer  p-1.5 rounded-lg text-white/50 hover:text-white/70 hover:bg-white/5  transition-all
+             shrink-0   ">
                 <TbMenu2 size={20} />
               </button>
               <div className="min-w-0  ">
@@ -140,95 +149,33 @@ function AdminDashboard() {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               onClick={() => navigate("/generate")}
-              className="   px-2  flex  items-center gap-2 whitespace-nowrap py-2 rounded-lg bg-[#3be8ff] text-[#051c20] text-sm font-semibold hover:shadow-[0_8px_24px_rgba(59,232,255,0.3)] transition-all duration-300 cursor-pointer ">
+              className="   px-2  flex  items-center gap-2 whitespace-nowrap py-2 rounded-lg 
+              bg-[#3be8ff] text-[#051c20] text-sm font-semibold 
+               hover:shadow-[0_8px_24px_rgba(59,232,255,0.3)] transition-all duration-300 cursor-pointer ">
               <TbPlus />
               <span className="hidden sm:inline" > AI component</span>
 
             </motion.button>
           </div>
+          <AnimatePresence mode="wait" >
+            {activeView === "dashboard" && (
+              <motion.div
+                key="dashboard"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.25 }}
+                className="px-4 sm:px-6 lg:px-8 py-5 sm:py-6 space-y-4 sm:space-y-6 ">
 
-          {activeView === "dashboard" && (
-            <div className="p-4 sm:p-6 lg:p-8">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: 0.1 }}
-                  className="relative p-6 rounded-2xl overflow-hidden group cursor-pointer"
-                  style={{
-                    background: "linear-gradient(135deg, rgba(59,232,255,0.08) 0%, rgba(10,181,212,0.04) 100%)",
-                    border: "1px solid rgba(59,232,255,0.15)",
-                    backdropFilter: "blur(10px)"
-                  }}
-                >
-                  <div className="absolute inset-0 bg-gradient-to-br from-[#3be8ff]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  <div className="relative z-10">
-                    <p className="text-white/50 text-sm font-medium mb-2">Total Users</p>
-                    <motion.h3
-                      initial={{ scale: 0.8 }}
-                      animate={{ scale: 1 }}
-                      transition={{ duration: 0.5, type: "spring", stiffness: 100 }}
-                      className="text-4xl sm:text-5xl font-bold text-[#3be8ff]"
-                    >
-                      {allUsers?.length || 0}
-                    </motion.h3>
-                    <p className="text-white/35 text-xs mt-3">Active users on platform</p>
-                  </div>
-                  <div className="absolute top-2 right-2 w-20 h-20 bg-[#3be8ff]/10 rounded-full blur-2xl" />
-                </motion.div>
+                <div className="grid grid-cols-2 gap-3 sm:gap-4">
 
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: 0.2 }}
-                  className="relative p-6 rounded-2xl overflow-hidden group cursor-pointer"
-                  style={{
-                    background: "linear-gradient(135deg, rgba(59,232,255,0.08) 0%, rgba(10,181,212,0.04) 100%)",
-                    border: "1px solid rgba(59,232,255,0.15)",
-                    backdropFilter: "blur(10px)"
-                  }}
-                >
-                  <div className="absolute inset-0 bg-gradient-to-br from-[#3be8ff]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  <div className="relative z-10">
-                    <p className="text-white/50 text-sm font-medium mb-2">Total Components</p>
-                    <motion.h3
-                      initial={{ scale: 0.8 }}
-                      animate={{ scale: 1 }}
-                      transition={{ duration: 0.5, delay: 0.1, type: "spring", stiffness: 100 }}
-                      className="text-4xl sm:text-5xl font-bold text-[#3be8ff]"
-                    >
-                      {allComponents?.length || 0}
-                    </motion.h3>
-                    <p className="text-white/35 text-xs mt-3">Components in library</p>
-                  </div>
-                  <div className="absolute top-2 right-2 w-20 h-20 bg-[#3be8ff]/10 rounded-full blur-2xl" />
-                </motion.div>
-              </div>
+                </div>
 
-              <div className="mt-6 space-y-3">
-                {(allComponents || []).map((component, index) => (
-                  <motion.div
-                    key={component?._id || index}
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: index * 0.04 }}
-                    className="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-4"
-                  >
-                    <p className="text-sm font-semibold text-[#3be8ff]">
-                      {component?.name || "Unnamed Component"}
-                    </p>
+              </motion.div>
+            )}
 
-                    <pre className="mt-2 overflow-x-auto text-sm text-white/70 whitespace-pre-wrap break-words">
-                      Props : 
-                      {typeof component?.props === "string"
-                        ? component.props.replace(/\s+/g, " ")
-                        : JSON.stringify(component?.props || {})}
-                    </pre>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          )}
+          </AnimatePresence>
+
         </main>
 
       </div>
