@@ -39,7 +39,11 @@ function AdminDashboard() {
       console.log(`Error in logout ${error}`)
     }
 
-  }
+  } 
+
+  const chatData=(()=>{
+    if(publicComponents)
+  })();
 
   const SidebarContent = () => (
     <>
@@ -168,6 +172,25 @@ function AdminDashboard() {
                 className="px-4 sm:px-6 lg:px-8 py-5 sm:py-6 space-y-4 sm:space-y-6 ">
 
                 <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                  {stats.map(({ label, value, icon: Icon, color }, i) => (
+                    <motion.div key={i}
+                      initial={{ opacity: 0, y: 16 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: i * 0.08, duration: 0.4 }}
+                      className="p-3.5 sm:p-4 rounded-2xl border border-white/[0.07] 
+                       bg-white/[0.02] hover:border-white[0.12] transition-all   "
+                    >
+                      <div className="mb-2.5 sm:mb-3">
+                        <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center" style={{ background: `${color}15`, border: `1px solid ${color}25 ` }}> 
+                          <Icon />
+                        </div>
+                        
+                      </div> 
+                      <p className="text-xl sm:text-2xl  font-bold ">{value.toLocaleString()} </p>
+                        <p className="text-white/40 text-xs mt-0.5  "> {label} </p>
+
+                    </motion.div>
+                  ))}
 
                 </div>
 
@@ -176,9 +199,9 @@ function AdminDashboard() {
 
           </AnimatePresence>
 
-        </main>
+        </main >
 
-      </div>
+      </div >
 
     </>
   )
