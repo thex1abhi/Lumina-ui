@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setUserData } from "../redux/userSlice";
 import { AnimatePresence, motion } from "motion/react";
-
+import { AreaChart, Area, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
 
 
 function AdminDashboard() {
@@ -19,13 +19,15 @@ function AdminDashboard() {
   const { userData, allUsers, allComponents } = useSelector((s) => s.user)
 
   const publicComponents = allComponents?.filter((c) => c.visiblity === "public") || []
+  console.log(publicComponents)
+
   const navItems = [
     { id: "dashboard", label: "Dashboard", Icon: TbLayoutDashboard },
     { id: "add", label: "Add Components", Icon: TbPackage }
   ]
 
   const stats = [
-    { label: "Total Users", value: allUsers?.length || 0, icon: TbUsers, color: "#3be8f" },
+    { label: "Total Users", value: allUsers?.length || 0, icon: TbUsers, color: "#3be8ff" },
     { label: "Components Made", value: publicComponents?.length || 0, icon: TbCode, color: "#a78bfa" },
   ]
 
@@ -39,16 +41,28 @@ function AdminDashboard() {
       console.log(`Error in logout ${error}`)
     }
 
-  } 
+  }
 
-  const chatData=(()=>{
-    if(publicComponents)
+  const chatData = (() => {
+    if (!publicComponents.length) return []
+    const map = {}
+    publicComponents.forEach((c) => {
+      const raw = c.createdAt;
+      if (!raw) return;
+      const label = new Date(raw).toLocaleDateString("en-us",
+        { month: "short", day: "numeric" });
+      map[label] = (map[label] || 0) + 1;
+    });
+    return Object.entries(map)
+      .map(([date, count]) => ({ date, components: count }))
+      .sort((a, b) => new Date(a.date) - new Date(b.date))
+      .slice(-12);
   })();
 
   const SidebarContent = () => (
     <>
-      <div className="flex items-center gap-2.5 px-5 py-5 border-b border-white/[0.06]  ">
-        <div className="w-8 h-8  rounded-xl bg-linear-to-br from-[#3be8ff] to-[#0ab5d4] flex items-center justify-center shadow-[0_0_14px_rgba(59,232,255,0.4)] flex-shrink-0  ">
+      <div className="flex items-center gap-2.5 px-5 py-5 border-b border-white/6  ">
+        <div className="w-8 h-8  rounded-xl bg-linear-to-br from-[#3be8ff] to-[#0ab5d4] flex items-center justify-center shadow-[0_0_14px_rgba(59,232,255,0.4)] shrink-0  ">
           <SiValorant size={15} color="#051c28" />
         </div>
         <div className="">
@@ -97,7 +111,7 @@ function AdminDashboard() {
       <div className="min-h-screen bg-[#030b0d] text-white flex overflow-hidden "
         style={{ fontFamily: "'DM Sans','sans-serif'" }}
       >
-        <aside className="hidden md:flex flex-col w-60 min-h-screen bg-[#040e11] border-r border-white/[0.06]  fixed top-0 left-0 z-20  ">
+        <aside className="hidden md:flex flex-col w-60 min-h-screen bg-[#040e11] border-r border-white/6  fixed top-0 left-0 z-20  ">
           <SidebarContent />
         </aside>
 
@@ -178,21 +192,75 @@ function AdminDashboard() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: i * 0.08, duration: 0.4 }}
                       className="p-3.5 sm:p-4 rounded-2xl border border-white/[0.07] 
-                       bg-white/[0.02] hover:border-white[0.12] transition-all   "
+                       bg-white/2 hover:border-white[0.12] transition-all   "
                     >
                       <div className="mb-2.5 sm:mb-3">
-                        <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center" style={{ background: `${color}15`, border: `1px solid ${color}25 ` }}> 
+                        <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center" style={{ background: `${color}15`, border: `1px solid ${color}25 ` }}>
                           <Icon />
                         </div>
-                        
-                      </div> 
+
+                      </div>
                       <p className="text-xl sm:text-2xl  font-bold ">{value.toLocaleString()} </p>
-                        <p className="text-white/40 text-xs mt-0.5  "> {label} </p>
+                      <p className="text-white/40 text-xs mt-0.5  "> {label} </p>
 
                     </motion.div>
                   ))}
 
                 </div>
+
+                {/* chart  */}
+
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2, duration: 0.5 }}
+                  className="p-4 sm:p-5 rounded-2xl border border-white/[0.07] 
+                   bg-white/[0.02] " >
+                  <div className="flex items-start sm:items-center justify-between mb-4 sm:mb-5 gap-2 ">
+                    <div className="min-w-0">
+                      <p className="font-semibold text-sm truncate"> Public Components Published  </p>
+                      <p className="text-white/35 text-xs mt-0.5  ">Date-wise breakdown  </p>
+                    </div>
+                    <span className="text-[10px] font-semibold px-2 sm:px-2.5 py-1 rounded-full 
+                   bg-[#a78bfa]/10 text-[#a78bfa] border  border-[#a78bfa]/20 shrink-0 ">
+                      Date</span>
+
+                  </div>
+                  {chatData?.length === 0 ? (
+                    <div className="h-[180px] sm:h-[220px] flex items-center justify-center text-white/20 text-sm  ">
+                      No public Components yet
+                    </div>
+                  ) : (
+                    <ResponsiveContainer width="100%" height={200} >
+                      <AreaChart data={chatData}
+                        margin={{ top: 5, right: 5, bottom: 0, left: -25 }} >
+                        <defs>
+                          <linearGradient id="componentGradient" x1="0" y1="0" x2="0" y2="1" >
+                            <stop offset="0%" stopColor="#a78bfa" stopOpacity={0.03} />
+                            <stop offset="100%" stopColor="#a78bfa" stopOpacity={0} />
+                          </linearGradient>
+                        </defs>
+
+                        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04 )" />
+                        <XAxis dataKey="date"
+                          tick={{ fill: "rgba(255,255,255,0.3)", fontSize: 10 }}
+                          axisLine={false}
+                          tickLine={false}
+                          interval="preserveStartEnd" />
+                        <YAxis
+                          tick={{ fill: "rgba(255,255,255,0.3)", fontSize: 10 }}
+                          axisLine={false}
+                          tickLine={false}
+                          allowDecimals={false}
+                          width={30} />
+
+                        <Tooltip />
+                        <Area type="monotone" dataKey="components" stroke="#a78bfa" strokewidth={2} fill="url(#ComponentGradient)" dot={false}
+                          activeDot={{ r: 4, fill: "#a78bfa", strokewidth: 0 }} />
+                      </AreaChart>
+                    </ResponsiveContainer>
+                  )}
+                </motion.div >
 
               </motion.div>
             )}
