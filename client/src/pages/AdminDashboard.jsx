@@ -18,8 +18,9 @@ function AdminDashboard() {
   const [sideBarOpen, SetsideBarOpen] = useState(false);
   const { userData, allUsers, allComponents } = useSelector((s) => s.user)
 
-  const publicComponents = allComponents?.filter((c) => c.visiblity === "public") || []
-  console.log(publicComponents)
+  const publicComponents = Array.isArray(allComponents)
+    ? allComponents.filter((component) => component?.visibility === "public" || component?.visiblity === "public")
+    : []
 
   const navItems = [
     { id: "dashboard", label: "Dashboard", Icon: TbLayoutDashboard },
@@ -45,19 +46,29 @@ function AdminDashboard() {
 
   const chatData = (() => {
     if (!publicComponents.length) return []
+
     const map = {}
-    publicComponents.forEach((c) => {
-      const raw = c.createdAt;
+    publicComponents.forEach((component) => {
+      const raw = component?.createdAt;
       if (!raw) return;
-      const label = new Date(raw).toLocaleDateString("en-us",
-        { month: "short", day: "numeric" });
+
+      const createdDate = new Date(raw);
+      if (Number.isNaN(createdDate.getTime())) return;
+
+      const label = createdDate.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+      });
+
       map[label] = (map[label] || 0) + 1;
     });
+
     return Object.entries(map)
       .map(([date, count]) => ({ date, components: count }))
       .sort((a, b) => new Date(a.date) - new Date(b.date))
       .slice(-12);
-  })();
+  })(); 
+  console.log("chatdata:", chatData )
 
   const SidebarContent = () => (
     <>
@@ -223,7 +234,7 @@ function AdminDashboard() {
                     </div>
                     <span className="text-[10px] font-semibold px-2 sm:px-2.5 py-1 rounded-full 
                    bg-[#a78bfa]/10 text-[#a78bfa] border  border-[#a78bfa]/20 shrink-0 ">
-                      Date</span>
+                      Last 12 Days</span>
 
                   </div>
                   {chatData?.length === 0 ? (
@@ -236,12 +247,12 @@ function AdminDashboard() {
                         margin={{ top: 5, right: 5, bottom: 0, left: -25 }} >
                         <defs>
                           <linearGradient id="componentGradient" x1="0" y1="0" x2="0" y2="1" >
-                            <stop offset="0%" stopColor="#a78bfa" stopOpacity={0.03} />
+                            <stop offset="0%" stopColor="#a78bfa" stopOpacity={0.3} />
                             <stop offset="100%" stopColor="#a78bfa" stopOpacity={0} />
                           </linearGradient>
                         </defs>
 
-                        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04 )" />
+                        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
                         <XAxis dataKey="date"
                           tick={{ fill: "rgba(255,255,255,0.3)", fontSize: 10 }}
                           axisLine={false}
@@ -255,8 +266,15 @@ function AdminDashboard() {
                           width={30} />
 
                         <Tooltip />
-                        <Area type="monotone" dataKey="components" stroke="#a78bfa" strokewidth={2} fill="url(#ComponentGradient)" dot={false}
-                          activeDot={{ r: 4, fill: "#a78bfa", strokewidth: 0 }} />
+                        <Area
+                          type="monotone"
+                          dataKey="components"
+                          stroke="#a78bfa"
+                          strokeWidth={2}
+                          fill="url(#componentGradient)"
+                          dot={false}
+                          activeDot={{ r: 4, fill: "#a78bfa", strokeWidth: 0 }}
+                        />
                       </AreaChart>
                     </ResponsiveContainer>
                   )}
