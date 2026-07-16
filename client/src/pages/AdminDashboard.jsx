@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { SiValorant } from "react-icons/si";
-import { TbChevronLeft, TbCode, TbLayoutDashboard, TbLogout, TbMenu2, TbPackage, TbPlus, TbUsers } from "react-icons/tb";
+import { TbChevronLeft, TbCode, TbLayoutDashboard, TbLogout, TbMenu2, TbPackage, TbPlus, TbSearch, TbUsers, TbWorld } from "react-icons/tb";
 import { ServerUrl } from "../App";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
@@ -44,6 +44,8 @@ function AdminDashboard() {
 
   }
 
+
+
   const chatData = (() => {
     if (!publicComponents.length) return []
 
@@ -67,8 +69,19 @@ function AdminDashboard() {
       .map(([date, count]) => ({ date, components: count }))
       .sort((a, b) => new Date(a.date) - new Date(b.date))
       .slice(-12);
-  })(); 
-  console.log("chatdata:", chatData )
+  })();
+
+  function CustomTooltip({ active, payload, label }) {
+    if (!active || !payload?.length) return null;
+    return (
+      <div className="bg-[#0a1f24] border border-white/10 rounded-xl px-3 py-2  
+      text-xs shadow-xl ">
+        <p className="text-white/50 mb-1 "> {label} </p>
+        <p className="text-[#5a3db1] font-bold "> {payload[0].value} component </p>
+      </div>
+    )
+  }
+
 
   const SidebarContent = () => (
     <>
@@ -247,8 +260,8 @@ function AdminDashboard() {
                         margin={{ top: 5, right: 5, bottom: 0, left: -25 }} >
                         <defs>
                           <linearGradient id="componentGradient" x1="0" y1="0" x2="0" y2="1" >
-                            <stop offset="0%" stopColor="#a78bfa" stopOpacity={0.3} />
-                            <stop offset="100%" stopColor="#a78bfa" stopOpacity={0} />
+                            <stop offset="0%" stopColor="#5a3db1" stopOpacity={0.3} />
+                            <stop offset="100%" stopColor="#5a3db1" stopOpacity={0} />
                           </linearGradient>
                         </defs>
 
@@ -265,7 +278,7 @@ function AdminDashboard() {
                           allowDecimals={false}
                           width={30} />
 
-                        <Tooltip />
+                        <Tooltip content={CustomTooltip} />
                         <Area
                           type="monotone"
                           dataKey="components"
@@ -279,6 +292,34 @@ function AdminDashboard() {
                     </ResponsiveContainer>
                   )}
                 </motion.div >
+
+                {/* public components  */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3, duration: 0.5 }}
+                  className="rounded-2xl border border-white/[0.07] 
+                 bg-white/[0.02]  overflow-hidden  " >
+                  <div className="flex  flex-col sm:flex-row sm:items-center justify-between gap-3 px-4 sm:px-5 py-4  border-b border-white/[0.05] ">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-7 h-7 rounded-lg flex items-center justify-center   "
+                        style={{ background: "rgba(59,232,255,0.1)", border: "1px solid rgba(59,232 , 255,0.2)" }}  > <TbWorld size={14} style={{ color: "#3be8ff" }} />   </div>
+
+                      <div className="">
+                        <p className="font-semibold text-sm  "> Public Components</p>
+                        <p className="text-white/35 text-[11px]">{publicComponents.length} components visible to all  Users </p>
+                      </div>
+                    </div>
+
+                    <div className="relative w-full sm:w-4 ">
+                    <TbSearch size={13}  className="absolute  left-3 top-1/2 -translate-y-1/2 
+                     text-white/30 pointer-events-none " />
+                    <input type="text" className="" />
+                    </div>
+                  </div>
+
+
+                </motion.div>
 
               </motion.div>
             )}
