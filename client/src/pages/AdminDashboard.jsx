@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { SiValorant } from "react-icons/si";
-import { TbChevronLeft, TbCode, TbLayoutDashboard, TbLogout, TbMenu2, TbPackage, TbPlus, TbSearch, TbUsers, TbWorld } from "react-icons/tb";
+import { TbBoxOff, TbChevronLeft, TbCode, TbLayoutDashboard, TbLogout, TbMenu2, TbPackage, TbPlus, TbSearch, TbUsers, TbWorld } from "react-icons/tb";
 import { ServerUrl } from "../App";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
@@ -16,6 +16,8 @@ function AdminDashboard() {
   const navigate = useNavigate();
   const [activeView, setactiveView] = useState("dashboard");
   const [sideBarOpen, SetsideBarOpen] = useState(false);
+  const [componentSearch, setComponentSearch] = useState("");
+
   const { userData, allUsers, allComponents } = useSelector((s) => s.user)
 
   const publicComponents = Array.isArray(allComponents)
@@ -44,6 +46,13 @@ function AdminDashboard() {
 
   }
 
+  const filteredPublicComponents = componentSearch.trim()
+    ? publicComponents.filter((c) =>
+      c.name?.toLowerCase().includes(componentSearch.toLowerCase()) ||
+      c.props?.some((p) => p.toLowerCase().includes(componentSearch.
+        toLowerCase()))
+    )
+    : publicComponents;
 
 
   const chatData = (() => {
@@ -311,12 +320,85 @@ function AdminDashboard() {
                       </div>
                     </div>
 
-                    <div className="relative w-full sm:w-4 ">
-                    <TbSearch size={13}  className="absolute  left-3 top-1/2 -translate-y-1/2 
+                    <div className="relative w-full sm:w-64 ">
+                      <TbSearch size={13} className="absolute  left-3 top-1/2 -translate-y-1/2 
                      text-white/30 pointer-events-none " />
-                    <input type="text" className="" />
+                      <input
+                        onChange={(e) => setComponentSearch(e.target.value)}
+                        placeholder="Search Component..."
+                        className="w-full bg-white/[0.04] border border-white/30 rounded-xl
+                     pl-8 pr-3 py-2 text-xs  text-white placeholder-white/25  outline-none
+                      focus:border-[#3be8ff]/40  transition-colors     " />
                     </div>
                   </div>
+                  {
+                    filteredPublicComponents.length === 0 ? (
+                      <div className="flex flex-col items-center justify-center py-14 gap-3 text-white/20">
+                        <TbBoxOff size={32} />
+                        <p className="text-sm">
+                          {componentSearch ? "No components match your search" : "No public components yet"}
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="divide-y divide-white/[0.04] ">
+                        {filteredPublicComponents.map((c, i) => (
+                          <motion.div key={i} className="flex items-start sm:items-center justify-between gap-3 px-4 sm:px-5 py-3.5 hover:bg-white/[0.02] transition-colors  ">
+                            <div className="flex items-start sm:items-center gap-3 min-w-0 ">
+                              <div className="w-8 h-8 rounded-xl flex items-center justify-center
+                             flex-shrink-0 mt-0.5 sm:mt-0  "
+                                style={{
+                                  background: "rgba(167,139,250,0.1)",
+                                  border: "1px solid rgba(167,139,250,0.2)"
+                                }}  >
+                                <TbCode size={14} style={{ color: "#a78bfa" }} />
+                              </div>
+                              <div className="min-w-0">
+                                <p className="text-sm font-semibold text-white truncate">{c.name}
+                                </p>
+                                {c.props?.length > 0 && (
+                                  <div className="flex flex-wrap mt-1 gap-1">
+                                    {c.props.slice(0, 4).map((p) => (
+                                      <div key={p} className="px-1.5 py-0.5  rounded-md text-[10px]
+                                       font-medium "
+                                        style={{
+                                          background: "rgba(167,139,250,0.1)",
+                                          color: "rgba(167,139,250,0.7)"
+                                        }} >
+                                        {p}
+
+                                      </div>
+                                    ))}
+                                    {c.props?.length > 4 && (
+                                      <span className="px-1.5  py-0.5 rounded-md text-[10px] text-white/25 ">
+                                        +{c.props.length - 4} more
+                                      </span>
+                                    )}
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                            <div className="flex flex-col sm:flex-row items-end md:items-center gap-2 flex-shrink-0 ">
+                              <span className="text-[11px]  text-white/25 whitespace-nowrap  ">
+                                {
+                                  new Date(c.createdAt).toLocaleDateString("en-us", {
+                                    month: "short", day: "numeric", year: "numeric"
+                                  })
+
+                                }  </span>
+                              <span className="flex items-center gap-1 px-2 py-0.5 rounded-full
+                                 text-[10px] font-semibold  "
+                                style={{
+                                  background: "rgba(59,232,255,0.08)",
+                                  color: "#3be8ff", border: " 1px solid rgba(59,232,255,0.2)"
+                                }} > <TbWorld size={9} /> Public 
+                              </span>
+
+                            </div>
+                          </motion.div>
+                        ))}
+                      </div>
+                    )
+                  }
 
 
                 </motion.div>
