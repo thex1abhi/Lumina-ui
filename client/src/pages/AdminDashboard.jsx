@@ -9,6 +9,26 @@ import { setUserData } from "../redux/userSlice";
 import { AnimatePresence, motion } from "motion/react";
 import { AreaChart, Area, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
 
+function AddComponentForm() {
+  return (
+    <div className="px-4 sm:px-6 lg:px-8 py-5 sm:py-6 max-w-3xl w-full mx-auto  " >
+      <h2 className="text-base sm:text-lg  font-bold mb-1  ">
+        Add Component
+      </h2>
+      <p className="text-white/35  text-xs  mb-5 sm:mb-6   ">
+        Manually add a component - give it a name , define props, paste the code and preview it.
+      </p>
+      <div className="space-y-4 sm:space-y-5 ">
+
+        <div className="p-3.5 sm:p-4 rounded-2xl border border-white[0.07] 
+        bg-white/[0.02] space-y-2  ">
+          ``
+        </div>
+
+      </div>
+    </div>
+  )
+}
 
 function AdminDashboard() {
 
@@ -390,7 +410,7 @@ function AdminDashboard() {
                                 style={{
                                   background: "rgba(59,232,255,0.08)",
                                   color: "#3be8ff", border: " 1px solid rgba(59,232,255,0.2)"
-                                }} > <TbWorld size={9} /> Public 
+                                }} > <TbWorld size={9} /> Public
                               </span>
 
                             </div>
@@ -406,7 +426,22 @@ function AdminDashboard() {
               </motion.div>
             )}
 
+            {activeView === "add" && (
+              <motion.div key="add"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 10 }}
+                transition={{ duration: 0.25 }}
+              >
+                <AddComponentForm />
+
+              </motion.div>
+            )}
+
+
           </AnimatePresence>
+
+
 
         </main >
 
