@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { SiValorant } from "react-icons/si";
-import { TbBoxOff, TbChevronLeft, TbCode, TbLayoutDashboard, TbLogout, TbMenu2, TbPackage, TbPlus, TbSearch, TbUsers, TbWorld } from "react-icons/tb";
+import { TbBoxOff, TbChevronLeft, TbCode, TbCodeDots, TbEye, TbLayoutDashboard, TbLogout, TbMenu2, TbPackage, TbPlus, TbSearch, TbUsers, TbWorld, TbX } from "react-icons/tb";
 import { ServerUrl } from "../App";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,8 +8,85 @@ import { useNavigate } from "react-router-dom";
 import { setUserData } from "../redux/userSlice";
 import { AnimatePresence, motion } from "motion/react";
 import { AreaChart, Area, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
+import { LiveComponentPreview } from "../components/LiveComponentPreview";
+
+function PropsInput({ props, setProps }) {
+  const [input, setInput] = useState([]);
+
+  const addProps = () => {
+    const trimmed = input.trim()
+    if (trimmed && !props.includes(trimmed)) {
+      setProps([...props, trimmed])
+    }
+    setInput("")
+  }
+
+  const removeProps = (p) => setProps(props.filter((x) => x !== p))
+
+  return (
+    <div >
+      <div className="flex flex-wrap mb-2  gap-1.5  min-h-[20px]  ">
+        {props.map((p) => (
+          <span key={p}
+            className="flex items-center gap-1 px-2.5  py-0.5 rounded-full text-xs font-semibold"
+            style={{
+              background: "rgba(167,139,250,0.15)", color: "#a78bfa",
+              border: "1px solid rgba(167,139,250,0.25)"
+            }} > {p}
+            <button onClick={() => removeProps(p)}
+              className="ml-0.5 opacity-60  hover:opacity-100  transition-opacity bg-transparent border-none  cursor-pointer p-0 leading-none    "
+              style={{ color: "#a78bfa" }}  >
+              <TbX size={11} /> </button>
+          </span>
+
+        ))}
+        {props.length === 0 && (
+          <span className="text-xs  text-white/20 self-center "> No props added yet
+          </span>
+        )}
+      </div>
+      <div className="flex gap-2">
+        <input
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === ",") {
+              e.preventDefault();
+              addProps();
+            }
+          }}
+          onChange={(e) => setInput(e.target.value)}
+          value={input}
+          placeholder='e.g. " title" ,"onClick", "children" '
+          className=" flex-1 min-w-0 bg-white/[0.04]  border border-white/10 
+          rounded-xl  px-3 py-2 text-sm  text-white placeholder-white/20 
+          outline-none focus:border-[#a78bfa]/50 transition-colors    "
+        />
+        <button onClick={addProps}
+          className="px-3 sm:px-4  py-2 rounded-xl text-sm  font-semibold  border-none cursor-pointer  transition-all  whitespace-nowrap   "
+          style={{
+            background: "rgba(167,139,250,0.15)", color: "#a78bfa",
+            border: "1px solid rgba(167,139,250,0.25)"
+          }}
+        >
+          Add
+        </button>
+      </div>
+      <p className="text-[10px] text-white/20 mt-1.5  ">
+        Press <span className="px-1 py-0.5 rounded bg-white/5 text-white/70 text-[9px]  ">
+          Enter </span> or comma to add a prop
+      </p>
+    </div>
+  )
+
+}
 
 function AddComponentForm() {
+  const [name, setName] = useState("");
+  const [props, setprops] = useState([]);
+  const [code, setcode] = useState("");
+  const [codeTab, setCodeTab] = useState("code");
+
+
+
   return (
     <div className="px-4 sm:px-6 lg:px-8 py-5 sm:py-6 max-w-3xl w-full mx-auto  " >
       <h2 className="text-base sm:text-lg  font-bold mb-1  ">
@@ -20,9 +97,90 @@ function AddComponentForm() {
       </p>
       <div className="space-y-4 sm:space-y-5 ">
 
-        <div className="p-3.5 sm:p-4 rounded-2xl border border-white[0.07] 
+        <div className="p-3.5 sm:p-4 rounded-2xl border border-white/[0.07] 
         bg-white/[0.02] space-y-2  ">
-          ``
+          <label
+            className="text-xs font-semibold text-white/50 uppercase  tracking-wider block  "
+            htmlFor="name"> Component Name </label>
+          <input type="text" id="name"
+            onChange={(e) => setName(e.target.value)}
+            placeholder='e.g. "Pricing Card","Hero Section"'
+            className="w-full bg-white/[0.04]  border border-white/20 rounded-xl  px-3 py-2.5 
+             text-sm text-white  placeholder-white/20  outline-none 
+              focus:border-[#3be8ff]/40  transition-colors " />
+        </div>
+        <div className="p-3.5 sm:p-4 rounded-2xl border border-white/[0.07] bg-white/[0.02] 
+         space-y-2  ">
+          <label className="text-xs font-semibold text-white/50 uppercase  tracking-wider block  "
+          > Props </label>
+          <PropsInput props={props} setProps={setprops} />
+
+        </div>
+
+        <div className="rounded-2xl border border-white/[0.07]
+         bg-white/[0.02] overflow-hidden ">
+          <div className="flex items-center justify-between px-3.5 sm:px-4 py-3 border-b
+          border-white/[0.06] ">
+            <label htmlFor="" className="text-xs font-semibold text-white/50 uppercase 
+           tracking-wider "  > Component Code </label>
+            <div className="flex gap-1 rounded-xl px-1 " style={{
+              background: "rgba(0,0,0,0.3)"
+            }} >
+              {["code", "preview"].map((tab) => (
+                <button key={tab}
+                  onClick={() => setCodeTab(tab)}
+                  className="flex items-center  gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-medium transition-all capitalize border-none cursor-pointer "
+                  style={{
+                    background: codeTab === tab ? "rgba(59,232,255,0.2)" : "transparent",
+                    color: codeTab === tab ? "#3be8ff" : "rgba(255,255,255,0.4)",
+                  }}  >
+                  {tab === "code" ? <TbCodeDots size={12} /> : <TbEye size={12} />}
+                  <span className="hidden  xs:inline"> {tab} </span>
+                </button>
+              ))}
+
+            </div>
+          </div>
+
+          <AnimatePresence mode="wait" >
+            {codeTab === "code" ? (
+              // code section 
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >   <textarea
+                  onChange={(e) => setcode(e.target.value)}
+                  value={code}
+                  rows={12}
+                  placeholder={`export default function MyComponent ({title})  {\n   return (\n <div>\n      <h1>{title} </h1>\n </div>\n);\n}`}
+                  className="w-full bg-[#0d1117] px-4 sm:px-5 py-4 text-xs leading-relaxed text-green-300  font-mono resize-none outline-none placeholder-white/10 "
+                  style={{ minHeight: 220 }}
+                />
+
+
+              </motion.div>
+            ) : (
+              // prview section 
+              <motion.div
+                className="p-3.5 sm:p-4"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                {code.trim() ? (
+                  <LiveComponentPreview  code={code} />
+                ): (
+                  <div className="h-36 sm:h-40 flex items-center justify-center text-white/20 text-sm rounded-lg   " 
+                  style={{border:"1px dashed rgba(255,255,255,0.08)"}}
+                  >  Paste some code  to see the preview</div> 
+                  ) }
+
+              </motion.div>
+            )}
+
+          </AnimatePresence>
+
         </div>
 
       </div>
