@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { SiValorant } from "react-icons/si";
-import { TbBoxOff, TbChevronLeft, TbCode, TbCodeDots, TbEye, TbLayoutDashboard, TbLogout, TbMenu2, TbPackage, TbPlus, TbSearch, TbUsers, TbWorld, TbX } from "react-icons/tb";
+import { TbBoxOff, TbChevronLeft, TbCode, TbCodeDots, TbDeviceFloppy, TbEye, TbLayoutDashboard, TbLogout, TbMenu2, TbPackage, TbPlus, TbSearch, TbUsers, TbWorld, TbX } from "react-icons/tb";
 import { ServerUrl } from "../App";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
@@ -84,7 +84,10 @@ function AddComponentForm() {
   const [props, setprops] = useState([]);
   const [code, setcode] = useState("");
   const [codeTab, setCodeTab] = useState("code");
-
+  const [saving, setSaving] = useState(false);
+  const [publishing, setPublishing] = useState(false);
+  const [savedId, setSavedId] = useState(null);
+  const [isPublished, setIsPublished] = useState(false);
 
 
   return (
@@ -169,17 +172,42 @@ function AddComponentForm() {
                 exit={{ opacity: 0 }}
               >
                 {code.trim() ? (
-                  <LiveComponentPreview  code={code} />
-                ): (
-                  <div className="h-36 sm:h-40 flex items-center justify-center text-white/20 text-sm rounded-lg   " 
-                  style={{border:"1px dashed rgba(255,255,255,0.08)"}}
-                  >  Paste some code  to see the preview</div> 
-                  ) }
+                  <LiveComponentPreview code={code} />
+                ) : (
+                  <div className="h-36 sm:h-40 flex items-center justify-center text-white/20 text-sm rounded-lg   "
+                    style={{ border: "1px dashed rgba(255,255,255,0.08)" }}
+                  >  Paste some code  to see the preview</div>
+                )}
 
               </motion.div>
             )}
 
           </AnimatePresence>
+
+        </div>
+
+        <div className="flex items-center gap-2 sm:gap-3 flex-wrap  pt-1 ">
+          <motion.button whileTap={{ scale: 0.97 }} 
+          disabled={saving || savedId }
+            className="flex items-center  gap-2 px-4 sm:px-5 py-2.5 rounded-xl text-sm font-semibold 
+          disabled:opacity-40 disabled:cursor-not-allowed transition-all border-none cursor-pointer"
+            style={{
+              background: savedId ? " rgba(16,185,129,0.12)" : "rgba(59,232,255,0.12)",
+              color: savedId ? "#34d399" : "#3be8ff",
+              border: `1px solid ${savedId ? "rgba(16,185,129,0.3)" : "rgba(59,232,255,0.25) "}`
+            }}>   
+                  {saving  ? (
+                    <motion.span animate={{rotate:360}} 
+                    transition={{repaet:Infinity,duration:1,ease:"linear"}}
+                     >  <TbDeviceFloppy  size={15} />
+                    </motion.span>
+                  ):(  
+                    <TbDeviceFloppy size={15}  />
+                  ) } 
+                  {saving  ? "Saving..." : savedId ? "Saved ✓ " : "Save Component" }
+            
+            
+          </motion.button>
 
         </div>
 
