@@ -11,3 +11,5 @@ export { PricingCard } from "./components/PricingCard/PricingCard.jsx";
 export { MenuBar } from "./components/MenuBar/MenuBar.jsx";
 
 export { Spinner } from "./components/Spinner/Spinner.jsx";
+
+export { Badge } from "./components/Badge/Badge.jsx";

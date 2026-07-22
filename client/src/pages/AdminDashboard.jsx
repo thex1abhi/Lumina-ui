@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { SiValorant } from "react-icons/si";
-import { TbBoxOff, TbChevronLeft, TbCode, TbCodeDots, TbDeviceFloppy, TbEye, TbLayoutDashboard, TbLogout, TbMenu2, TbPackage, TbPlus, TbSearch, TbUsers, TbWorld, TbX } from "react-icons/tb";
+import { TbBoxOff, TbChevronLeft, TbCode, TbCodeDots, TbDeviceFloppy, TbEye, TbLayoutDashboard, TbLoader, TbLockDollar, TbLogout, TbMenu2, TbPackage, TbPlus, TbSearch, TbTrack, TbTrash, TbUsers, TbWorld, TbX } from "react-icons/tb";
 import { ServerUrl } from "../App";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,6 +9,33 @@ import { setUserData } from "../redux/userSlice";
 import { AnimatePresence, motion } from "motion/react";
 import { AreaChart, Area, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
 import { LiveComponentPreview } from "../components/LiveComponentPreview";
+import { FiAlertCircle, FiCheckCircle } from "react-icons/fi";
+
+const Toast = ({ message, type, onClose }) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: -40 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -40 }}
+      className="fixed top-6 right-6 z-50 flex items-center gap-3 
+     px-5 py-3 rounded-2xl shadow-2xl"
+      style={{
+        background: type === "success" ? "#0d9f6e " : type === "error" ?
+          "#e02424" : "#1c1c2e",
+        color: "#fff",
+        minWidth: "220px",
+      }}
+    >
+      {type === "success" ? <FiCheckCircle size={18} /> : <FiAlertCircle size={18} />}
+      <p className=""> {message} </p>
+      <button
+        onClick={onClose}
+        className="ml-auto text-white/60 hover:text-white text-xs ">
+        <TbX size={18} />
+      </button>
+    </motion.div>
+  )
+}
 
 function PropsInput({ props, setProps }) {
   const [input, setInput] = useState([]);
@@ -25,7 +52,7 @@ function PropsInput({ props, setProps }) {
 
   return (
     <div >
-      <div className="flex flex-wrap mb-2  gap-1.5  min-h-[20px]  ">
+      <div className="flex flex-wrap mb-2  gap-1.5  min-h-5  ">
         {props.map((p) => (
           <span key={p}
             className="flex items-center gap-1 px-2.5  py-0.5 rounded-full text-xs font-semibold"
@@ -56,7 +83,7 @@ function PropsInput({ props, setProps }) {
           onChange={(e) => setInput(e.target.value)}
           value={input}
           placeholder='e.g. " title" ,"onClick", "children" '
-          className=" flex-1 min-w-0 bg-white/[0.04]  border border-white/10 
+          className=" flex-1 min-w-0 bg-white/4  border border-white/10 
           rounded-xl  px-3 py-2 text-sm  text-white placeholder-white/20 
           outline-none focus:border-[#a78bfa]/50 transition-colors    "
         />
@@ -82,12 +109,56 @@ function PropsInput({ props, setProps }) {
 function AddComponentForm() {
   const [name, setName] = useState("");
   const [props, setprops] = useState([]);
-  const [code, setcode] = useState("");
+  const [code, setCode] = useState("");
   const [codeTab, setCodeTab] = useState("code");
   const [saving, setSaving] = useState(false);
   const [publishing, setPublishing] = useState(false);
   const [savedId, setSavedId] = useState(null);
   const [isPublished, setIsPublished] = useState(false);
+  const [toast, setToast] = useState(null);
+
+  const showToast = (message, type = "info") => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3500)
+  }
+
+
+  const handleSave = async () => {
+    if (!name.trim() || !code.trim()) {
+      showToast("Component name and code are required", "error");
+      return;
+    }
+    setSaving(true)
+    try {
+      const res = await axios.post(ServerUrl + "/api/component/save", {
+        name, code, props
+      }, { withCredentials: true })
+      setSavedId(res.data._id)
+      showToast("Component saved sucessfully!", "success")
+      setSaving(false)
+    } catch (error) {
+      console.log(error);
+      showToast("Component save failed", "error")
+      setSaving(false)
+    }
+  }
+
+  const handlePublished = async () => {
+    if (!savedId) return;
+    setPublishing(true)
+    try {
+      await axios.post(ServerUrl + "/api/component/publish", { componentId: savedId },
+        { withCredentials: true })
+      setIsPublished(true)
+      showToast("Publish to npm successfull", "success")
+      setPublishing(false)
+
+    } catch (error) {
+      console.log(error);
+      showToast("Published failed", "error")
+      setPublishing(false)
+    }
+  }
 
 
   return (
@@ -101,18 +172,18 @@ function AddComponentForm() {
       <div className="space-y-4 sm:space-y-5 ">
 
         <div className="p-3.5 sm:p-4 rounded-2xl border border-white/[0.07] 
-        bg-white/[0.02] space-y-2  ">
+        bg-white/2 space-y-2  ">
           <label
             className="text-xs font-semibold text-white/50 uppercase  tracking-wider block  "
             htmlFor="name"> Component Name </label>
           <input type="text" id="name"
             onChange={(e) => setName(e.target.value)}
             placeholder='e.g. "Pricing Card","Hero Section"'
-            className="w-full bg-white/[0.04]  border border-white/20 rounded-xl  px-3 py-2.5 
+            className="w-full bg-white/4  border border-white/20 rounded-xl  px-3 py-2.5 
              text-sm text-white  placeholder-white/20  outline-none 
               focus:border-[#3be8ff]/40  transition-colors " />
         </div>
-        <div className="p-3.5 sm:p-4 rounded-2xl border border-white/[0.07] bg-white/[0.02] 
+        <div className="p-3.5 sm:p-4 rounded-2xl border border-white/[0.07] bg-white/2 
          space-y-2  ">
           <label className="text-xs font-semibold text-white/50 uppercase  tracking-wider block  "
           > Props </label>
@@ -121,9 +192,9 @@ function AddComponentForm() {
         </div>
 
         <div className="rounded-2xl border border-white/[0.07]
-         bg-white/[0.02] overflow-hidden ">
+         bg-white/2 overflow-hidden ">
           <div className="flex items-center justify-between px-3.5 sm:px-4 py-3 border-b
-          border-white/[0.06] ">
+          border-white/6 ">
             <label htmlFor="" className="text-xs font-semibold text-white/50 uppercase 
            tracking-wider "  > Component Code </label>
             <div className="flex gap-1 rounded-xl px-1 " style={{
@@ -153,7 +224,7 @@ function AddComponentForm() {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
               >   <textarea
-                  onChange={(e) => setcode(e.target.value)}
+                  onChange={(e) => setCode(e.target.value)}
                   value={code}
                   rows={12}
                   placeholder={`export default function MyComponent ({title})  {\n   return (\n <div>\n      <h1>{title} </h1>\n </div>\n);\n}`}
@@ -187,30 +258,96 @@ function AddComponentForm() {
         </div>
 
         <div className="flex items-center gap-2 sm:gap-3 flex-wrap  pt-1 ">
-          <motion.button whileTap={{ scale: 0.97 }} 
-          disabled={saving || savedId }
+          <motion.button whileTap={{ scale: 0.97 }}
+            onClick={handleSave}
+            disabled={saving || savedId}
             className="flex items-center  gap-2 px-4 sm:px-5 py-2.5 rounded-xl text-sm font-semibold 
           disabled:opacity-40 disabled:cursor-not-allowed transition-all border-none cursor-pointer"
             style={{
               background: savedId ? " rgba(16,185,129,0.12)" : "rgba(59,232,255,0.12)",
               color: savedId ? "#34d399" : "#3be8ff",
               border: `1px solid ${savedId ? "rgba(16,185,129,0.3)" : "rgba(59,232,255,0.25) "}`
-            }}>   
-                  {saving  ? (
-                    <motion.span animate={{rotate:360}} 
-                    transition={{repaet:Infinity,duration:1,ease:"linear"}}
-                     >  <TbDeviceFloppy  size={15} />
-                    </motion.span>
-                  ):(  
-                    <TbDeviceFloppy size={15}  />
-                  ) } 
-                  {saving  ? "Saving..." : savedId ? "Saved ✓ " : "Save Component" }
-            
-            
+            }}>
+            {saving ? (
+              <motion.span animate={{ rotate: 360 }}
+                transition={{ repaet: Infinity, duration: 1, ease: "linear" }}
+              >  <TbDeviceFloppy size={15} />
+              </motion.span>
+            ) : (
+              <TbDeviceFloppy size={15} />
+            )}
+            {saving ? "Saving..." : savedId ? "Saved ✓ " : "Save Component"}
+
+
           </motion.button>
+          <AnimatePresence >
+            {
+              savedId && !isPublished && (
+                <motion.button
+                  onClick={handlePublished}
+                  initial={{ opacity: 0, x: -8 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -8 }}
+                  whileTap={{ scale: 0.97 }}
+                  disabled={publishing}
+                  className="flex items-center  gap-2 px-4 sm:px-5  py-2.5 rounded-xl text-sm 
+                font-semibold disabled:opacity-40 transition-all broder-none cursor-pointer  "
+                  style={{
+                    background: "linear-gradient(135deg,#06b6d4 0% , #0891b2 100%)",
+                    boxShadow: publishing ? "none" : "0 0 20px rgba(6,182,212,0.25)",
+                    color: "#fff"
+                  }}  >
+
+                  {publishing ? (
+                    <motion.span animate={{ rotate: 360 }}
+                      transition={{ repaet: Infinity, duration: 1, ease: "linear" }}
+                    >  <TbLoader size={15} />
+                    </motion.span>
+                  ) : (
+                    <TbLoader size={15} />
+                  )}
+                  {publishing ? "Publishing..." : "Publish to npm "}
+
+                </motion.button>
+              )
+            }
+            {isPublished && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold "
+                style={{
+                  background: " rgba(16,185,129,0.1) ",
+                  border: "1px solid rgba(16,185,129,0.3)",
+                  color: "#34d399"
+                }} >
+                ✓ Published
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {(savedId || name || code) && (
+            <button
+              onClick={() => {
+                setName("");
+                setprops([]);
+                setCode("");
+                setSavedId(null);
+                setIsPublished(false);
+                setCodeTab("code")
+              }}
+              className="ml-auto flex items-center  gap-1.5 px-3 py-2 rounded-xl text-xs
+               text-white/30  hover:text-white/60 transition-all bg-transparent border-none cursor-pointer ">
+              <TbTrash size={15} /> Reset
+            </button>
+          )}
 
         </div>
-
+        <AnimatePresence >
+          {toast && (
+            <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />
+          )}
+        </AnimatePresence>
       </div>
     </div>
   )
@@ -454,7 +591,7 @@ function AdminDashboard() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2, duration: 0.5 }}
                   className="p-4 sm:p-5 rounded-2xl border border-white/[0.07] 
-                   bg-white/[0.02] " >
+                   bg-white/2 " >
                   <div className="flex items-start sm:items-center justify-between mb-4 sm:mb-5 gap-2 ">
                     <div className="min-w-0">
                       <p className="font-semibold text-sm truncate"> Public Components Published  </p>
@@ -466,7 +603,7 @@ function AdminDashboard() {
 
                   </div>
                   {chatData?.length === 0 ? (
-                    <div className="h-[180px] sm:h-[220px] flex items-center justify-center text-white/20 text-sm  ">
+                    <div className="h-45 sm:h-55 flex items-center justify-center text-white/20 text-sm  ">
                       No public Components yet
                     </div>
                   ) : (
@@ -514,8 +651,8 @@ function AdminDashboard() {
                   initial={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3, duration: 0.5 }}
                   className="rounded-2xl border border-white/[0.07] 
-                 bg-white/[0.02]  overflow-hidden  " >
-                  <div className="flex  flex-col sm:flex-row sm:items-center justify-between gap-3 px-4 sm:px-5 py-4  border-b border-white/[0.05] ">
+                 bg-white/2  overflow-hidden  " >
+                  <div className="flex  flex-col sm:flex-row sm:items-center justify-between gap-3 px-4 sm:px-5 py-4  border-b border-white/5 ">
                     <div className="flex items-center gap-2.5">
                       <div className="w-7 h-7 rounded-lg flex items-center justify-center   "
                         style={{ background: "rgba(59,232,255,0.1)", border: "1px solid rgba(59,232 , 255,0.2)" }}  > <TbWorld size={14} style={{ color: "#3be8ff" }} />   </div>
@@ -532,7 +669,7 @@ function AdminDashboard() {
                       <input
                         onChange={(e) => setComponentSearch(e.target.value)}
                         placeholder="Search Component..."
-                        className="w-full bg-white/[0.04] border border-white/30 rounded-xl
+                        className="w-full bg-white/4 border border-white/30 rounded-xl
                      pl-8 pr-3 py-2 text-xs  text-white placeholder-white/25  outline-none
                       focus:border-[#3be8ff]/40  transition-colors     " />
                     </div>
@@ -546,12 +683,12 @@ function AdminDashboard() {
                         </p>
                       </div>
                     ) : (
-                      <div className="divide-y divide-white/[0.04] ">
+                      <div className="divide-y divide-white/4 ">
                         {filteredPublicComponents.map((c, i) => (
-                          <motion.div key={i} className="flex items-start sm:items-center justify-between gap-3 px-4 sm:px-5 py-3.5 hover:bg-white/[0.02] transition-colors  ">
+                          <motion.div key={i} className="flex items-start sm:items-center justify-between gap-3 px-4 sm:px-5 py-3.5 hover:bg-white/2 transition-colors  ">
                             <div className="flex items-start sm:items-center gap-3 min-w-0 ">
                               <div className="w-8 h-8 rounded-xl flex items-center justify-center
-                             flex-shrink-0 mt-0.5 sm:mt-0  "
+                             shrink-0 mt-0.5 sm:mt-0  "
                                 style={{
                                   background: "rgba(167,139,250,0.1)",
                                   border: "1px solid rgba(167,139,250,0.2)"
@@ -583,7 +720,7 @@ function AdminDashboard() {
                                 )}
                               </div>
                             </div>
-                            <div className="flex flex-col sm:flex-row items-end md:items-center gap-2 flex-shrink-0 ">
+                            <div className="flex flex-col sm:flex-row items-end md:items-center gap-2 shrink-0 ">
                               <span className="text-[11px]  text-white/25 whitespace-nowrap  ">
                                 {
                                   new Date(c.createdAt).toLocaleDateString("en-us", {
