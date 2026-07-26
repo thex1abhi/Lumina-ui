@@ -5,6 +5,24 @@ import { TbChevronRight, TbLayoutSidebarLeftExpand, TbMenu2, TbSearch, TbX } fro
 import { useSelector } from "react-redux"
 import { AnimatePresence, motion } from "motion/react";
 
+function GuidePanel() {
+  return (
+    <div className=" flex flex-col items-center justify-center  h-full  px-6  sm:px-8 
+    text-center  py-10 sm:py-16  "> 
+    
+    </div>
+  )
+}
+
+
+function DetailePanel({ component, onBack }) {
+  return (
+    <div className="">
+      Detail panel
+    </div>
+  )
+}
+
 function SideBarComponent({ publicComponents, selected, onSelect, search, setSearch }) {
   return (
     <>
@@ -120,7 +138,7 @@ function AllComponents() {
         <AnimatePresence >
           {sideBarOpen && (
             <>
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
@@ -157,6 +175,16 @@ function AllComponents() {
           )}
 
         </AnimatePresence>
+
+        <main className="flex-1 overflow-auto bg-[#030b0d] min-w-0   ">
+          {
+            selected ? (
+              <DetailePanel component={selected} onBack={() => setSelected(null)} />
+            ) : (
+              <GuidePanel />
+            )
+          }
+        </main>
 
       </div>
     </div>
