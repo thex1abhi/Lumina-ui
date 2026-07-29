@@ -5,7 +5,7 @@ import { SiValorant } from "react-icons/si";
 import { AnimatePresence, motion } from "motion/react"
 import { TbAdjustments, TbArrowRight, TbBrandNpm, TbCheck, TbCode, TbComponents, TbCopy, TbLayout, TbLogout, TbMenu, TbMenu2, TbPlayerPlay, TbX } from "react-icons/tb";
 import { ServerUrl } from "../App.jsx";
-import { setUserData } from "../redux/userSlice.js";
+import { setAllComponents, setAllUsers, setUserData } from "../redux/userSlice.js";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { HiSparkles } from "react-icons/hi2";
@@ -98,6 +98,8 @@ function Home() {
         try {
             await axios.get(ServerUrl + "/api/auth/logout", { withCredentials: true })
             dispatch(setUserData(null))
+            dispatch(setAllUsers(null))
+            dispatch(setAllComponents(null))
             navigate("/")
         } catch (error) {
             console.log(`Error in logout ${error}`)
@@ -523,8 +525,8 @@ function Home() {
                                     className="flex items-center justify-center gap-2 bg-[#3be8ff] text-[#030b0d] px-7 py-3.5 rounded-xl font-semibold text-sm cursor-pointer  border-none shadow-[0_0_30px_rgba(59,232,255,0.3)] hover:shadow-[0_0_40px_rgba(59,232,255,0.45)]  transition-shadow   ">
                                     <HiSparkles size={15} />   Get Started Free
                                 </motion.button>
-                                <motion.button  
-                                onClick={() => navigate("/components")}
+                                <motion.button
+                                    onClick={() => navigate("/components")}
                                     whilehover={{ y: -2 }}
                                     whileTap={{ scale: 0.98 }}
                                     className="flex items-center justify-center gap-2  px-7 py-3.5  
