@@ -1,15 +1,105 @@
 import React, { useState } from "react";
 import { SiValorant } from "react-icons/si";
 import { useNavigate } from "react-router-dom";
-import { TbChevronRight, TbLayoutSidebarLeftExpand, TbMenu2, TbSearch, TbX } from "react-icons/tb"
+import {
+  TbCheck,
+  TbChevronRight, TbCopy, TbLayoutSidebarLeftExpand, TbMenu2,
+  TbPackage, TbSearch, TbX
+} from "react-icons/tb"
 import { useSelector } from "react-redux"
 import { AnimatePresence, motion } from "motion/react";
 
+function CopyBtn({ text }) {
+  const [copied, setCopied] = useState(false);
+
+  return (
+    <div className="flex items-center  gap-1.5 text-[11px] text-white/30 
+    hover:text-white/60 transition-colors bg-transparent border-none
+     cursor-pointer  px-2 py-1 rounded-lg hover:bg-white/[0.04 ]   ">
+      {copied ? <TbCheck size={13} className="text-[#3be8ff]" /> :
+        <TbCopy size={13} className="" />
+      } {copied ? "Copied" : "Copy"}
+    </div>
+  )
+}
+
+function codeBlock({ code, lang = "jsx" }) {
+  return (
+    <div className="rounded-xl overflow-hidden"
+      style={{ background: "#060f11", border: "1p solid rgba(255,255,255,0.06)" }}
+    >
+      <div className="flex items-center justify-between px-4 py-2 border-b
+       border-white/[0.05] ">
+        <span className="text-[10px] font-mono  tracking-widest  uppercase text-white/2   ">
+          {lang}
+        </span>
+      </div>
+
+    </div>
+  )
+}
+
 function GuidePanel() {
+
+  const { userData } = useSelector((s) => s.user)
+
   return (
     <div className=" flex flex-col items-center justify-center  h-full  px-6  sm:px-8 
-    text-center  py-10 sm:py-16  "> 
-    
+    text-center  py-10 sm:py-16  ">
+      <motion.div
+        className="w-full"
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <div className="w-14 h-14 sm:h-16 sm:w-16 rounded-2xl bg-[#3be8ff]/[0.07] border 
+         border-[#3be8ff]/15 flex items-center justify-center mx-auto mb-5 sm:mb-6  ">
+          <TbPackage size={24} className="text-[#3be8ff]/60" />
+
+
+
+        </div>
+        {userData ? (
+          <>
+            <h2 className="text-base sm:text-lg font-bold  mb-2 text-white/80    ">
+              Select a Component</h2>
+            <p className="text-white/35 text-xs sm:text-sm mb-8 sm:mb-10 max-w-sm mx-auto 
+              leading-relaxed   ">
+              Click any component  from the sidebar to see its preview , code and usage guide.
+            </p>
+          </>
+
+        ) : (
+          <>
+            <h2 className="text-base sm:text-lg font-bold  mb-2 text-white/80    ">
+              Sign in to explore components </h2>
+            <p className="text-white/35 text-xs sm:text-sm mb-8 sm:mb-10 max-w-sm mx-auto 
+              leading-relaxed   ">
+              Sign in first to browse prebuilt components , live preview and usage  guide
+            </p>
+          </>
+
+
+        )}
+
+        <div className="w-full max-w-md mx-auto text-left space-y-4  mb-8   ">
+          <p className="text-[10px] font-bold tracking-[3px] uppercase text-[#3be8ff]/50 
+          mb-4  ">
+            Quick Start Guide
+          </p>
+
+          <div className="">
+            <p className="text-xs text-white/40  mb-2 flex items-center gap-1.5  ">
+              <span className="text-[#3be8ff]/60 font-bold  ">01 </span>
+              Install the package
+            </p>
+          </div>
+        </div>
+
+
+
+      </motion.div>
+
     </div>
   )
 }
