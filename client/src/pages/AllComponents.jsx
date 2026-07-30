@@ -2,18 +2,29 @@ import React, { useState } from "react";
 import { SiValorant } from "react-icons/si";
 import { useNavigate } from "react-router-dom";
 import {
+  TbBox,
   TbCheck,
-  TbChevronRight, TbCopy, TbLayoutSidebarLeftExpand, TbMenu2,
+  TbChevronRight, TbCode, TbCopy, TbEye, TbLayoutSidebarLeftExpand, TbMenu2,
   TbPackage, TbSearch, TbX
 } from "react-icons/tb"
 import { useSelector } from "react-redux"
 import { AnimatePresence, motion } from "motion/react";
+import { LiveComponentPreview } from "../components/LiveComponentPreview.jsx";
+
 
 function CopyBtn({ text }) {
   const [copied, setCopied] = useState(false);
 
+  const handleCopy = () => {
+    navigator.clipboard.writeText(text)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 3500);
+  }
+
   return (
-    <div className="flex items-center  gap-1.5 text-[11px] text-white/30 
+    <div
+      onClick={handleCopy}
+      className="flex items-center  gap-1.5 text-[11px] text-white/30 
     hover:text-white/60 transition-colors bg-transparent border-none
      cursor-pointer  px-2 py-1 rounded-lg hover:bg-white/[0.04 ]   ">
       {copied ? <TbCheck size={13} className="text-[#3be8ff]" /> :
@@ -23,17 +34,22 @@ function CopyBtn({ text }) {
   )
 }
 
-function codeBlock({ code, lang = "jsx" }) {
+function CodeBlock({ code, lang = 'jsx' }) {
   return (
     <div className="rounded-xl overflow-hidden"
-      style={{ background: "#060f11", border: "1p solid rgba(255,255,255,0.06)" }}
+      style={{ background: "#060f11", border: "1px solid rgba(255,255,255,0.06)" }}
     >
       <div className="flex items-center justify-between px-4 py-2 border-b
        border-white/[0.05] ">
-        <span className="text-[10px] font-mono  tracking-widest  uppercase text-white/2   ">
+        <span className="text-[10px] font-mono  tracking-widest  uppercase text-white/60  ">
           {lang}
         </span>
+        <CopyBtn text={code} />
       </div>
+      <pre className="px-4 py-3.5 text-[12px] font-mono text-green-300 
+      leading-relaxed  overflow-x-auto  whitespace-pre-wrap  ">
+        {code}
+      </pre>
 
     </div>
   )
@@ -55,8 +71,6 @@ function GuidePanel() {
         <div className="w-14 h-14 sm:h-16 sm:w-16 rounded-2xl bg-[#3be8ff]/[0.07] border 
          border-[#3be8ff]/15 flex items-center justify-center mx-auto mb-5 sm:mb-6  ">
           <TbPackage size={24} className="text-[#3be8ff]/60" />
-
-
 
         </div>
         {userData ? (
@@ -93,10 +107,29 @@ function GuidePanel() {
               <span className="text-[#3be8ff]/60 font-bold  ">01 </span>
               Install the package
             </p>
+            <CodeBlock code={` npm install @yadavabhi/lumina-ui `} lang='bash' />
+          </div>
+
+          <div className="">
+            <p className="text-xs text-white/40  mb-2 flex items-center gap-1.5  ">
+              <span className="text-[#3be8ff]/60 font-bold  ">02 </span>
+              Import your Components
+            </p>
+            <CodeBlock code={`import {componentName} from "@yadavabhi/lumina-ui" `} lang='jsx' />
+          </div>
+
+          <div className="">
+            <p className="text-xs text-white/40  mb-2 flex items-center gap-1.5  ">
+              <span className="text-[#3be8ff]/60 font-bold  ">03 </span>
+              Use it in your App.jsx
+            </p>
+            <CodeBlock code={`import {UserAvatar, PricingCard } from "@yadavabhi/lumina-ui";\n\nexport default function App(){\n return(\n <div>\n     <UserAvatar src="/user.png />\n     <PricingCard title="Pro" price={99} />\n </div>\n  );\n }`} lang='jsx' />
           </div>
         </div>
 
-
+        <p className="text-white/20 text-xs ">
+          ← Select a component  from the sidebar to get started
+        </p>
 
       </motion.div>
 
@@ -106,10 +139,146 @@ function GuidePanel() {
 
 
 function DetailePanel({ component, onBack }) {
+
+  const [activeTab, setActiveTab] = useState("preview");
+
+  const importCode = `import { ${component.name}} from "@yadavabhi/lumina-ui"; `;
+
+  const usageCode = `import { ${component.name}} from "@yadavabhi/lumina-ui"; 
+  \n\nexport default function App() {\n return (\n <div>\n <${component.name}${component.props?.length ?
+      `\n ${component.props.map((p) => `${p}={/* value */}`).join("\n        ")} `
+      : " "
+    }/>\n </div>\n  );\n} `;
+
   return (
-    <div className="">
-      Detail panel
-    </div>
+    <motion.div
+      key={component._id}
+      initial={{ opacity: 0, x: 12 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.35 }}
+      className="flex flex-col h-full  " >
+
+      {/* header  */}
+      <div className=" flex items-start  sm:items-center justify-between px-4 sm:px-6
+       py-4 sm:py-5  border-b border-white/[0.06]  gap-3 flex-wrap    ">
+        <div className="flex items-center  gap-3 min-w-0  ">
+          {onBack && (
+            <button
+              onClick={onBack}
+              className="sm:hidden flex items-center justify-center 
+            w-8 h-8 rounded-xl bg-white/[0.05] border border-white/[0.08] 
+            text-whte/50 hover:text-white/80 transition-colors cursor-pointer  shrink-0 ">
+              <TbX size={14} />
+            </button>
+          )}
+          <div className="min-w-0 ">
+            <h2 className="text-sm sm:text-base font-bold text-white truncate  ">
+              {component.name} </h2>
+
+            <p className="text-white/35 text-[11px] sm:text-xs mt-0.5  truncate  ">
+              {component.props?.length > 0
+                ? `Props : ${component.props.join(" , ")} `
+                : "No props"}
+            </p>
+          </div>
+        </div>
+
+
+        <div className=" flex gap-1 rounded-xl p-1 overflow-x-auto  shrink-0   "
+          style={{ background: "rgba(0,0,0,0.3)" }}  >
+          {
+            [
+              { id: "preview", icon: TbEye, label: "Preview" },
+              { id: "code", icon: TbCode, label: "Code" },
+              { id: "guide", icon: TbBox, label: "Guide" },
+            ].map(({ id, icon: Icon, label }) => (
+              <button key={id}
+                onClick={() => setActiveTab(id)}
+                className=" flex  items-center gap-1  sm:gap-1.5 px-2.5 sm:px-3  py-1.5  
+                rounded-lg text-[11px] sm:text-xs font-medium transition-all capitalize 
+                cursor-pointer border-none  whitespace-nowrap  "
+                style={{
+                  background: activeTab === id ? "rgba(59,232,255,0.15)" : "transparent",
+                  color: activeTab === id ? "#3be8ff" : "rgba(255,255,255,0.25)",
+                }}>
+                <Icon size={11} /> {label}
+              </button>
+            ))
+          }
+
+        </div>
+
+      </div>
+
+      <div className=" flex-1 overflow-y-auto p-4 sm:p-6  ">
+        <AnimatePresence mode="wait" >
+          {
+            activeTab === "preview" && (
+              <motion.div key="preview" className=""
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                <LiveComponentPreview code={component.code} />
+              </motion.div>
+            )
+          }
+
+
+          {
+            activeTab === "code" && (
+              <motion.div key="code" className=""
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                <CodeBlock code={component.code} lang="jsx" />
+              </motion.div>
+            )
+          }
+
+          {
+            activeTab === "guide" && (
+              <motion.div key="guide" className="space-y-5"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                {
+                  component.props.length > 0 && (
+                    <div className="">
+                      <p className="text-xs font-semibold text-white/50 mb-3  flex items-center
+                     gap-2  ">
+                        <TbBox size={13} /> Props
+                      </p>
+                      <div className="rounded-xl  overflow-hidden border border-white/[0.06]   ">
+                        <table className="w-full text-xs ">
+                          <thead className="">
+                            <tr className="broder-b border-white/[0.05] bg-white/[0.02] ">
+                              <th className="text-left px-4 py-2.5 text-white/35 
+                              ffont-medium "> Name </th>
+                              <th className=""> Type </th>
+                            </tr>
+
+                          </thead>
+
+                        </table>
+                      </div>
+                    </div>
+                  )
+                }
+              </motion.div>
+            )
+          }
+
+
+
+
+        </AnimatePresence>
+
+
+      </div>
+    </motion.div>
   )
 }
 
