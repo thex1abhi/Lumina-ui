@@ -3,6 +3,7 @@ import { SiValorant } from "react-icons/si";
 import { useNavigate } from "react-router-dom";
 import {
   TbBox,
+  TbBrandNpm,
   TbCheck,
   TbChevronRight, TbCode, TbCopy, TbEye, TbLayoutSidebarLeftExpand, TbMenu2,
   TbPackage, TbSearch, TbX
@@ -257,16 +258,35 @@ function DetailePanel({ component, onBack }) {
                             <tr className="broder-b border-white/[0.05] bg-white/[0.02] ">
                               <th className="text-left px-4 py-2.5 text-white/35 
                               ffont-medium "> Name </th>
-                              <th className=""> Type </th>
+                              <th className="text-left px-4 py-2.5 text-white/35 
+                              ffont-medium"> Type </th>
                             </tr>
 
                           </thead>
+                          <tbody>
+                            {component.props.map((p, i) => (
+                              <tr key={i}
+                                className="border-b border-white/[0.04] last:border-0 ">
+                                <td className="px-4 py-2.5 font-mono text-[#3be8ff]/70   ">
+                                  {p} </td>
+                                <td className="px-4 py-2.5 text-white/30 "> any </td>
+                              </tr>
+                            ))}
+                          </tbody>
 
                         </table>
                       </div>
                     </div>
                   )
                 }
+
+                <div className="">
+                  <p >
+                    <p  className="text-xs font-semibold  text-white/50 mb-3 flex
+                   items-center  gap-2" >
+                      <TbBrandNpm size={13} /> Install  </p>
+                  </p>
+                </div>
               </motion.div>
             )
           }
