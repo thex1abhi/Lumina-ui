@@ -11,6 +11,7 @@ import {
 import { useSelector } from "react-redux"
 import { AnimatePresence, motion } from "motion/react";
 import { LiveComponentPreview } from "../components/LiveComponentPreview.jsx";
+import { HiSparkles } from "react-icons/hi2";
 
 
 function CopyBtn({ text }) {
@@ -143,7 +144,7 @@ function DetailePanel({ component, onBack }) {
 
   const [activeTab, setActiveTab] = useState("preview");
 
-  const importCode = `import { ${component.name}} from "@yadavabhi/lumina-ui"; `;
+  const importCode = `import { ${component.name} } from "@yadavabhi/lumina-ui"; `;
 
   const usageCode = `import { ${component.name}} from "@yadavabhi/lumina-ui"; 
   \n\nexport default function App() {\n return (\n <div>\n <${component.name}${component.props?.length ?
@@ -282,11 +283,32 @@ function DetailePanel({ component, onBack }) {
 
                 <div className="">
                   <p >
-                    <p  className="text-xs font-semibold  text-white/50 mb-3 flex
+                    <p className="text-xs font-semibold  text-white/50 mb-3 flex
                    items-center  gap-2" >
                       <TbBrandNpm size={13} /> Install  </p>
+                    <CodeBlock code={` npm install @yadavabhi/lumina-ui `} lang="bash" /> 
+                  </p>
+                </div> 
+   
+                <div className="">
+                  <p >
+                    <p className="text-xs font-semibold  text-white/50 mb-3 flex
+                   items-center  gap-2" >
+                      <TbCode size={13} /> Import  </p>
+                    <CodeBlock code={importCode } lang="jsx" /> 
+                  </p>
+                </div> 
+
+                <div className="">
+                  <p >
+                    <p className="text-xs font-semibold  text-white/50 mb-3 flex
+                   items-center  gap-2" >
+                      <HiSparkles size={13} /> Usage in App.jsx  </p>
+                    <CodeBlock code={ usageCode } lang="jsx" /> 
                   </p>
                 </div>
+
+
               </motion.div>
             )
           }
