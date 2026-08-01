@@ -203,65 +203,14 @@ function DetailePanel({ component, onBack }) {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
               >
-                {
-                  component.props.length > 0 && (
-                    <div className="">
-                      <p className="text-xs font-semibold text-white/50 mb-3  flex items-center
-                     gap-2  ">
-                        <TbBox size={13} /> Props
-                      </p>
-                      <div className="rounded-xl  overflow-hidden border border-white/[0.06]   ">
-                        <table className="w-full text-xs ">
-                          <thead className="">
-                            <tr className="broder-b border-white/[0.05] bg-white/[0.02] ">
-                              <th className="text-left px-4 py-2.5 text-white/35 
-                              ffont-medium "> Name </th>
-                              <th className="text-left px-4 py-2.5 text-white/35 
-                              ffont-medium"> Type </th>
-                            </tr>
-
-                          </thead>
-                          <tbody>
-                            {component.props.map((p, i) => (
-                              <tr key={i}
-                                className="border-b border-white/[0.04] last:border-0 ">
-                                <td className="px-4 py-2.5 font-mono text-[#3be8ff]/70   ">
-                                  {p} </td>
-                                <td className="px-4 py-2.5 text-white/30 "> any </td>
-                              </tr>
-                            ))}
-                          </tbody>
-
-                        </table>
-                      </div>
-                    </div>
-                  )
-                }
+                <p className=" text-[10px] font-bold  tracking-[3px] uppercase
+               text-[#3be8ff]/50      ">User Guide
+                </p> 
 
                 <div className="">
-                  <p >
-                    <p className="text-xs font-semibold  text-white/50 mb-3 flex
-                   items-center  gap-2" >
-                      <TbBrandNpm size={13} /> Install  </p>
-                    <CodeBlock code={` npm install @yadavabhi/lumina-ui `} lang="bash" />
-                  </p>
-                </div>
+                  <p className=" text-xs font-semibold text-white/50 mb-3 flex items-center 
+                 gap-2 "> 
 
-                <div className="">
-                  <p >
-                    <p className="text-xs font-semibold  text-white/50 mb-3 flex
-                   items-center  gap-2" >
-                      <TbCode size={13} /> Import  </p>
-                    <CodeBlock code={importCode} lang="jsx" />
-                  </p>
-                </div>
-
-                <div className="">
-                  <p >
-                    <p className="text-xs font-semibold  text-white/50 mb-3 flex
-                   items-center  gap-2" >
-                      <HiSparkles size={13} /> Usage in App.jsx  </p>
-                    <CodeBlock code={usageCode} lang="jsx" />
                   </p>
                 </div>
 
@@ -270,13 +219,10 @@ function DetailePanel({ component, onBack }) {
             )
           }
 
-
-
-
         </AnimatePresence>
 
-
       </div>
+
     </motion.div>
   )
 }
@@ -337,12 +283,16 @@ function MyComponents() {
   const [search, setsearch] = useState("");
   const [sideBarOpen, setSideBarOpen] = useState(false);
 
+  const userId = userData?._id || userData?.id;
   const myComponents = (allComponents || [])
     .filter((c) => c.visibility === "private")
-    .filter((c) => c.owner?._id === userData?.id)
+    .filter((c) => {
+      const ownerId = c.owner?._id ? c.owner._id : c.owner;
+      return ownerId?.toString() === userId?.toString();
+    })
     .filter((c) => c.name?.toLowerCase().includes(search.toLowerCase()))
     .sort((a, b) => a.name?.localeCompare(b.name));
-  // console.log(publicComponents)  
+  console.log("my comp : ", myComponents)
 
   const handleSelect = (c) => {
     setSelected(c)
