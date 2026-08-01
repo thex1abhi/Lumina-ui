@@ -149,7 +149,7 @@ export const publishComponent = async (req, res) => {
 
 export const getAllComponents = async (req, res) => {
     try {
-        const components = await Component.find().populate("owner", "name, email").sort({ createdAt: -1 })
+        const components = await Component.find().populate("owner", "name email").sort({ createdAt: -1 }) 
         if (!components) {
             return res.status(404).json({
                 message: "Components not found "
