@@ -103,11 +103,17 @@ function DetailePanel({ component, onBack }) {
 
   const importCode = `import { ${component.name} } from "@yadavabhi/lumina-ui"; `;
 
-  const usageCode = `import { ${component.name}} from "@yadavabhi/lumina-ui"; 
-  \n\nexport default function App() {\n return (\n <div>\n <${component.name}${component.props?.length ?
-      `\n ${component.props.map((p) => `${p}={/* value */}`).join("\n        ")} `
-      : " "
-    }/>\n </div>\n  );\n} `;
+  const usageCode = `import ${component.name} from "./${component.name}";
+  
+  export default function App(){
+  return ( 
+  <div> 
+  <${component.name}${component.props?.length
+      ? `\n      ${component.props.map((p) => `${p}={/* value */}`).join("\n         ")}`
+      : " "} />
+  </div>
+  );
+   } `;
 
   return (
     <motion.div
@@ -204,15 +210,30 @@ function DetailePanel({ component, onBack }) {
                 exit={{ opacity: 0 }}
               >
                 <p className=" text-[10px] font-bold  tracking-[3px] uppercase
-               text-[#3be8ff]/50      ">User Guide
-                </p> 
+               text-[#3be8ff]/50      ">Usage Guide
+                </p>
 
                 <div className="">
                   <p className=" text-xs font-semibold text-white/50 mb-3 flex items-center 
-                 gap-2 "> 
-
+                 gap-2 ">
+                    <TbCode size={13} />
+                    <span className=" text-[#3be8ff]/70 font-bold  "> 01
+                    </span> Copy the component code
                   </p>
+                  <CodeBlock code={component.code} lang="jsx" />
                 </div>
+
+
+                <div className="">
+                  <p className=" text-xs font-semibold text-white/50 mb-3 flex items-center 
+                 gap-2 ">
+                    <TbCode size={13} />
+                    <span className=" text-[#3be8ff]/70 font-bold  "> 02
+                    </span> Create a new file
+                  </p>
+                  <CodeBlock code={`${component.name}.jsx`} lang="filename" />
+                </div>
+
 
 
               </motion.div>
