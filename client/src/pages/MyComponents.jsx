@@ -232,6 +232,17 @@ function DetailePanel({ component, onBack }) {
                     </span> Create a new file
                   </p>
                   <CodeBlock code={`${component.name}.jsx`} lang="filename" />
+                </div> 
+
+                
+                <div className="">
+                  <p className=" text-xs font-semibold text-white/50 mb-3 flex items-center 
+                 gap-2 ">
+                    <HiSparkles size={13} />
+                    <span className=" text-[#3be8ff]/70 font-bold  "> 03
+                    </span> Import and use in App.jsx
+                  </p>
+                  <CodeBlock code={usageCode} lang="jsx" />
                 </div>
 
 
