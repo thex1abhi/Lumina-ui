@@ -1,5 +1,6 @@
 import Payment from "../models/payment.model.js";
 import razorpay from "../utils/razorPay.js";
+import User from "../models/user.model.js"
 import crypto from "crypto"
 
 export const CreateOrder = async (req, res) => {
@@ -64,13 +65,21 @@ export const verifyPayment = async (req, res) => {
 
         payment.status = "paid"
         payment.razorpayPaymentId = razorpay_payment_id
-        await payment.save(); 
+        await payment.save();
 
-        const updatedUser= await User.findByIdandUpdate()
+        const updatedUser = await User.findByIdAndUpdate(payment.userId, {
+            $inc: { aiCredits: payment.aiCredits }
+        }, { new: true })
+
+        return res.json({
+            success: true,
+            message: "Payment verified and credits added",
+            User: updatedUser,
+        });
 
     } catch (error) {
-        console.log(error); 
+        console.log(error);
         return res.status(500).json({ message: `failed  to verify  Razorpay order ${error} ` })
-    }
-
-}
+    };
+  
+};

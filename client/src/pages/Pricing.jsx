@@ -2,6 +2,10 @@ import React from "react";
 import { AnimatePresence, motion } from "motion/react"
 import { useNavigate } from "react-router-dom";
 import { FiArrowLeft, FiCheck, FiLock, FiZap } from "react-icons/fi";
+import axios from "axios";
+import { ServerUrl } from "../App.jsx";
+import { useDispatch } from "react-redux";
+import { setUserData } from "../redux/userSlice.js";
 
 const plans = [
   {
@@ -42,6 +46,45 @@ const plans = [
 function Pricing() {
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const handlePayment = async (plan) => {
+    try {
+      const amount = plan.amount
+      const result = await axios.post(ServerUrl + "/api/payment/create", {
+        amount, aiCredits: plan.aiCredits
+      }, { withCredentials: true })
+
+      const options = {
+        key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+        amount: result.data.amount,
+        currency: "INR",
+        name: "LuminaUI",
+        description: `${plan.name} - ${plan.credits} Credits  `,
+        order_id: result.data.id,
+
+        handler: async function (response) {
+          const verifypay = await axios.post(ServerUrl + "/api/payment/verify", response, {
+            withCredentials: true
+          })
+          dispatch(setUserData(verifypay.data.user))
+
+          alert("Payment Successfull 🎉 AI credits added ");
+          navigate("/generate")
+
+        },
+        theme: {
+          color: "#34079C"
+        }
+      }
+
+      const rzp = new window.Razorpay(options)
+      rzp.open()
+
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
     <div className=" min-h-screen  text-white relative  overflow-hidden flex flex-col   "
@@ -192,6 +235,8 @@ function Pricing() {
               </ul>
 
               <button
+                disabled={plan.disabled}
+                onClick={() => handlePayment(plan)}
                 className=" w-full py-3 rounded-xl text-sm font-semibold transition-all   "
                 style={{
                   cursor: plan.disabled ? " not-allowed " : "pointer",
@@ -219,7 +264,7 @@ function Pricing() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4 }}
           className="text-center  text-white/20 text-xs mt-8   ">
-            Credits are added to your account instantly after payment 
+          Credits are added to your account instantly after payment
 
         </motion.p>
 
