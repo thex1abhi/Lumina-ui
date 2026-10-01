@@ -126,7 +126,7 @@ function Home() {
 
         <div className="absolute -top-16 -right-16 w-64 h-64 rounded-full bg-[radial-gradient(circle,rgba(59,232,255,0.08)_0%,transparent_70%)] pointer-events-none" />
 
-        <div className="absolute -bottom-32 -left-32 w-96 h-96 rounded-full bg-[radial-gradient(circle,rgba(59,232,255,0.05)_0%,transparent_70%)] pointer-events-none" />
+        <div className="absolute bottom-0 -left-32 w-96 h-96 rounded-full bg-[radial-gradient(circle,rgba(59,232,255,0.05)_0%,transparent_70%)] pointer-events-none" />
 
         <nav className="flex items-center justify-between px-6 sm:px-10 py-4 sm:py-3 relative z-10 border-b border-[#3be8ff]/10 backdrop-blur-md bg-[#040f12]/50" >
             <motion.div

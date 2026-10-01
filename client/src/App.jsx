@@ -10,6 +10,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import AllComponents from "./pages/AllComponents";
 import MyComponents from "./pages/MyComponents";
 import Pricing from "./pages/Pricing";
+import AdminRoute from "./components/AdminRoute";
 
 
 export const ServerUrl = "http://localhost:8000"
@@ -89,7 +90,15 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/generate" element={<Generate />} />
-        <Route path="/admin" element={<AdminDashboard />} />
+      
+        <Route
+          path="/admin"
+          element={
+            <AdminRoute authChecked={authChecked}>
+              <AdminDashboard />
+            </AdminRoute>
+          }
+        />
         <Route path="/components" element={<AllComponents />} />
         <Route path="/my-components" element={<MyComponents />} />
         <Route path="/pricing" element={<Pricing />} />
