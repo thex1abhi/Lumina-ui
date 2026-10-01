@@ -343,7 +343,7 @@ function SideBarComponent({ publicComponents, selected, onSelect, search, setSea
           Public .  {publicComponents.length}
         </p>
       </div>
-      <div className="flex-1 overflow-y-auto py-1 px-2  ">
+      <div className="component-sidebar-list min-h-0 flex-1 overflow-y-auto py-1 px-2">
         {publicComponents.length === 0 ? (
           <p className="text-white/20 text-xs text-center py-8 px-3  ">
             No  public Components yet</p>
@@ -392,7 +392,7 @@ function AllComponents() {
   }
 
   return (
-    <div className="min-h-screen bg-[#030b0d] text-white flex flex-col overflow-hidden"
+    <div className="h-screen bg-[#030b0d] text-white flex flex-col overflow-hidden"
       style={{ fontFamily: "'DM Sans','sans-serif'" }}>
 
       <nav className=" sticky top-0 z-40 flex items-center justify-between px-4 sm:px-8 py-3.5 
@@ -426,9 +426,8 @@ function AllComponents() {
 
       </nav>
 
-      <div className="flex flex-1 overflow-hidden   "
-        style={{ height: "calc(100vh -57px)" }}>
-        <aside className=" hidden sm:flex w-52 md:w-56 shrink-0 flex-col  border-r 
+      <div className="flex flex-1 min-h-0 overflow-hidden">
+        <aside className=" hidden sm:flex w-52 md:w-56 min-h-0 shrink-0 flex-col  border-r 
          border-white/[0.06]  bg-[#040e11] overflow-hidden  " >
 
           <SideBarComponent selected={selected} search={search}
