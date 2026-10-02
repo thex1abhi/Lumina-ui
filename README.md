@@ -26,28 +26,28 @@ Lumina UI is an AI-powered React component UI library that helps developers gene
 ## Screenshots
 
 ### Home Page
-![Lumina UI Home](../screenshots/home.png)
+![Lumina UI Home](./screenshots/home.png)
 
 ### Components page
-![Components Library](../screenshots/components.png)
+![Components Library](./screenshots/components.png)
 
 ### AI Generator
-![AI Component Generator](../screenshots/generate.png)
+![AI Component Generator](./screenshots/generate.png)
 
 ### Component Result / Preview
-![Generated Component Result](../screenshots/Result.png)
+![Generated Component Result](./screenshots/Result.png)
 
 ### Add Component 
-![Add Component Interface](../screenshots/addComponent.png)
+![Add Component Interface](./screenshots/addComponent.png)
 
 ### Admin Dashboard
-![Admin Dashboard](../screenshots/Admin.png)
+![Admin Dashboard](./screenshots/Admin.png)
 
 ### Pricing Page
-![Pricing Plans](../screenshots/pricing.png)
+![Pricing Plans](./screenshots/pricing.png)
 
 ### Login Screen
-![Authentication Modal](../screenshots/login.jpg)
+![Authentication Modal](./screenshots/login.jpg)
 
 
 ## Summary
