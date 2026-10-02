@@ -13,7 +13,7 @@ import Pricing from "./pages/Pricing";
 import AdminRoute from "./components/AdminRoute";
 
 
-export const ServerUrl = "http://localhost:8000"
+export const ServerUrl = "https://lumina-ui-library.onrender.com"
 function App() {
 
   const dispatch = useDispatch()
