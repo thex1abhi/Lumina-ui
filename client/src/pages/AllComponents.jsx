@@ -79,7 +79,7 @@ function GuidePanel() {
           <>
             <h2 className="text-base sm:text-lg font-bold  mb-2 text-white/80    ">
               Select a Component</h2>
-            <p className="text-white/35 text-xs sm:text-sm mb-8 sm:mb-10 max-w-sm mx-auto 
+            <p className="text-white/35 text-xs sm:text-sm mb-8 mt-12 sm:mb-10 max-w-sm mx-auto 
               leading-relaxed   ">
               Click any component  from the sidebar to see its preview , code and usage guide.
             </p>
